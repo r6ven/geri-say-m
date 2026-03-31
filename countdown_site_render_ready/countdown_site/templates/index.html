@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizim Geri Sayımımız</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="sparkles" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <aside class="photo-rail photo-rail-left" aria-label="Fotoğraflar sol">
+        {% for photo in photos[:6] %}
+        <figure class="photo-card photo-card-{{ loop.index }}">
+            <img src="{{ url_for('static', filename=photo.src) }}" alt="{{ photo.alt }}" loading="lazy">
+        </figure>
+        {% endfor %}
+    </aside>
+
+    <main class="content-shell">
+        <section class="hero-card">
+            <p class="eyebrow">Animasyonlu geri sayım</p>
+            <h1>Bizim için özel tarihlere kalan süre</h1>
+            <p class="subtitle">
+                Fotoğraflarla çevrili, hareketli ve duygulu bir geri sayım sayfası.
+            </p>
+
+            <div class="countdown-grid">
+                {% for item in countdowns %}
+                <article class="countdown-card {{ item.accent }}" data-target="{{ item.target_iso }}" id="{{ item.id }}">
+                    <div class="card-topline"></div>
+                    <p class="countdown-title">{{ item.title }}</p>
+                    <h2>{{ item.label }}</h2>
+                    <div class="timer">
+                        <div class="time-box">
+                            <span class="value days">00</span>
+                            <span class="unit">Gün</span>
+                        </div>
+                        <div class="time-box">
+                            <span class="value hours">00</span>
+                            <span class="unit">Saat</span>
+                        </div>
+                        <div class="time-box">
+                            <span class="value minutes">00</span>
+                            <span class="unit">Dakika</span>
+                        </div>
+                        <div class="time-box">
+                            <span class="value seconds">00</span>
+                            <span class="unit">Saniye</span>
+                        </div>
+                    </div>
+                    <p class="card-note">Her saniye yeni bir anı daha yaklaşıyor.</p>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <aside class="photo-rail photo-rail-right" aria-label="Fotoğraflar sağ">
+        {% for photo in photos[6:] %}
+        <figure class="photo-card photo-card-{{ loop.index + 6 }}">
+            <img src="{{ url_for('static', filename=photo.src) }}" alt="{{ photo.alt }}" loading="lazy">
+        </figure>
+        {% endfor %}
+    </aside>
+
+    <footer class="footer">
+        <p>© {{ year }} · Sevgiyle hazırlandı</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/countdown.js') }}"></script>
+</body>
+</html>

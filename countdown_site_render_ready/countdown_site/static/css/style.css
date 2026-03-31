@@ -1,0 +1,357 @@
+:root {
+    --bg: #0f0d13;
+    --bg-soft: rgba(255, 255, 255, 0.08);
+    --stroke: rgba(255, 255, 255, 0.16);
+    --text: #f7f2eb;
+    --muted: #dacfc3;
+    --gold-1: #ffe1a8;
+    --gold-2: #c89b4b;
+    --rose-1: #f7c7d8;
+    --rose-2: #bf6b89;
+    --shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at top, rgba(255, 209, 220, 0.12), transparent 30%),
+        radial-gradient(circle at bottom, rgba(255, 222, 173, 0.12), transparent 25%),
+        linear-gradient(180deg, #15111b 0%, #0f0d13 45%, #17121d 100%);
+    overflow-x: hidden;
+}
+
+body {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(180px, 240px) minmax(320px, 1fr) minmax(180px, 240px);
+    gap: 20px;
+    padding: 24px 18px 80px;
+}
+
+.bg-glow {
+    position: fixed;
+    border-radius: 999px;
+    filter: blur(80px);
+    opacity: 0.45;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.bg-glow-1 {
+    width: 260px;
+    height: 260px;
+    background: rgba(255, 204, 134, 0.22);
+    top: 80px;
+    left: 8%;
+    animation: breathe 8s ease-in-out infinite;
+}
+
+.bg-glow-2 {
+    width: 320px;
+    height: 320px;
+    background: rgba(244, 170, 205, 0.18);
+    bottom: 80px;
+    right: 10%;
+    animation: breathe 9.5s ease-in-out infinite reverse;
+}
+
+.sparkles span {
+    position: fixed;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.8);
+    box-shadow: 0 0 16px rgba(255,255,255,.75);
+    animation: twinkle 4s ease-in-out infinite;
+    z-index: 0;
+}
+
+.sparkles span:nth-child(1) { top: 12%; left: 24%; animation-delay: 0s; }
+.sparkles span:nth-child(2) { top: 26%; right: 18%; animation-delay: 1s; }
+.sparkles span:nth-child(3) { bottom: 18%; left: 15%; animation-delay: 2s; }
+.sparkles span:nth-child(4) { bottom: 28%; right: 24%; animation-delay: 3s; }
+.sparkles span:nth-child(5) { top: 52%; left: 8%; animation-delay: 1.5s; }
+.sparkles span:nth-child(6) { top: 58%; right: 10%; animation-delay: 2.5s; }
+
+.photo-rail,
+.content-shell,
+.footer {
+    position: relative;
+    z-index: 1;
+}
+
+.photo-rail {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding-top: 18px;
+}
+
+.photo-card {
+    width: min(100%, 205px);
+    aspect-ratio: 4 / 5;
+    padding: 8px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 26px;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transform-origin: center;
+    animation: floatCard 6.5s ease-in-out infinite;
+}
+
+.photo-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+    display: block;
+}
+
+.photo-card-1 { transform: rotate(-7deg); animation-delay: 0s; }
+.photo-card-2 { transform: rotate(5deg); animation-delay: 1s; }
+.photo-card-3 { transform: rotate(-4deg); animation-delay: 2s; }
+.photo-card-4 { transform: rotate(6deg); animation-delay: 1.5s; }
+.photo-card-5 { transform: rotate(-5deg); animation-delay: 0.5s; }
+.photo-card-6 { transform: rotate(4deg); animation-delay: 2.5s; }
+.photo-card-7 { transform: rotate(6deg); animation-delay: .2s; }
+.photo-card-8 { transform: rotate(-5deg); animation-delay: 1.2s; }
+.photo-card-9 { transform: rotate(4deg); animation-delay: 2.2s; }
+.photo-card-10 { transform: rotate(-6deg); animation-delay: .8s; }
+.photo-card-11 { transform: rotate(5deg); animation-delay: 1.8s; }
+.photo-card-12 { transform: rotate(-4deg); animation-delay: 2.8s; }
+
+.content-shell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-card {
+    width: min(100%, 920px);
+    margin-top: 36px;
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+    border: 1px solid var(--stroke);
+    border-radius: 34px;
+    padding: 34px 28px 30px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(16px);
+}
+
+.eyebrow {
+    margin: 0 0 12px;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-size: .78rem;
+}
+
+h1, h2 {
+    font-family: 'Cormorant Garamond', serif;
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(2.5rem, 4vw, 4.2rem);
+    line-height: 0.95;
+}
+
+.subtitle {
+    margin: 16px 0 0;
+    font-size: 1.03rem;
+    color: var(--muted);
+    max-width: 620px;
+    line-height: 1.7;
+}
+
+.countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 22px;
+    margin-top: 34px;
+}
+
+.countdown-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    padding: 24px 20px 22px;
+    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(16, 15, 24, .72);
+    transition: transform .35s ease, box-shadow .35s ease;
+}
+
+.countdown-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 36px rgba(0,0,0,.26);
+}
+
+.card-topline {
+    width: 100%;
+    height: 4px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+}
+
+.countdown-card.gold .card-topline {
+    background: linear-gradient(90deg, var(--gold-1), var(--gold-2));
+}
+
+.countdown-card.rose .card-topline {
+    background: linear-gradient(90deg, var(--rose-1), var(--rose-2));
+}
+
+.countdown-title {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+.countdown-card h2 {
+    margin: 8px 0 18px;
+    font-size: clamp(2rem, 2.6vw, 2.7rem);
+    line-height: 1;
+}
+
+.timer {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(68px, 1fr));
+    gap: 12px;
+}
+
+.time-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 14px 8px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.10);
+}
+
+.value {
+    font-size: clamp(1.5rem, 2vw, 2.2rem);
+    font-weight: 700;
+}
+
+.unit {
+    font-size: .82rem;
+    color: var(--muted);
+}
+
+.card-note {
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: .95rem;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    text-align: center;
+    color: rgba(247, 242, 235, .65);
+    font-size: .88rem;
+}
+
+@keyframes floatCard {
+    0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+    50% { transform: translateY(-10px) rotate(calc(var(--rot, 0deg) + 1.5deg)); }
+}
+
+.photo-card-1 { --rot: -7deg; }
+.photo-card-2 { --rot: 5deg; }
+.photo-card-3 { --rot: -4deg; }
+.photo-card-4 { --rot: 6deg; }
+.photo-card-5 { --rot: -5deg; }
+.photo-card-6 { --rot: 4deg; }
+.photo-card-7 { --rot: 6deg; }
+.photo-card-8 { --rot: -5deg; }
+.photo-card-9 { --rot: 4deg; }
+.photo-card-10 { --rot: -6deg; }
+.photo-card-11 { --rot: 5deg; }
+.photo-card-12 { --rot: -4deg; }
+
+@keyframes twinkle {
+    0%, 100% { opacity: .2; transform: scale(.8); }
+    50% { opacity: 1; transform: scale(1.4); }
+}
+
+@keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+}
+
+@media (max-width: 1200px) {
+    body {
+        grid-template-columns: minmax(120px, 190px) minmax(320px, 1fr) minmax(120px, 190px);
+    }
+
+    .photo-card {
+        width: min(100%, 170px);
+    }
+}
+
+@media (max-width: 980px) {
+    body {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 18px 14px 90px;
+    }
+
+    .photo-rail {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding-top: 0;
+    }
+
+    .photo-card {
+        width: min(30vw, 140px);
+        aspect-ratio: 1 / 1.18;
+    }
+
+    .hero-card {
+        margin-top: 6px;
+        padding: 28px 18px 22px;
+    }
+
+    .countdown-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 580px) {
+    .photo-card:nth-child(n+5) {
+        display: none;
+    }
+
+    h1 {
+        line-height: 1;
+    }
+
+    .timer {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .countdown-card h2 {
+        font-size: 2rem;
+    }
+
+    .value {
+        font-size: 1.8rem;
+    }
+}
