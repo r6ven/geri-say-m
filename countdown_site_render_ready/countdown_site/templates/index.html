@@ -33,10 +33,7 @@
     <main class="content-shell">
         <section class="hero-card">
             <h1>Bizim için özel tarihlere kalan süre</h1>
-
-            <p class="subtitle">
-                Fotoğraflarla çevrili, hareketli ve bize özel bir geri sayım sayfası.
-            </p>
+        
 
             <div class="countdown-grid">
                 {% for item in countdowns %}
@@ -70,7 +67,11 @@
                         </div>
                     </div>
 
-                    <p class="card-note">Her saniye yeni bir anı daha yaklaşıyor.</p>
+                    {% if loop.index == 1 %}
+    <p class="card-note">Yüzük sağdan -> sola</p>
+{% elif loop.index == 2 %}
+    <p class="card-note">3 5 oynayalım sonra ev🏠</p>
+{% endif %}
                 </article>
                 {% endfor %}
             </div>
