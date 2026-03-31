@@ -1,14 +1,22 @@
 :root {
-    --bg: #0f0d13;
-    --bg-soft: rgba(255, 255, 255, 0.08);
-    --stroke: rgba(255, 255, 255, 0.16);
-    --text: #f7f2eb;
-    --muted: #dacfc3;
-    --gold-1: #ffe1a8;
-    --gold-2: #c89b4b;
-    --rose-1: #f7c7d8;
-    --rose-2: #bf6b89;
-    --shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+    --bg: #f5f4ec;
+    --bg-soft: rgba(255, 255, 255, 0.50);
+    --stroke: rgba(98, 127, 104, 0.18);
+    --text: #324236;
+    --muted: #6a7b6c;
+
+    --green-1: #d8ead6;
+    --green-2: #8fb597;
+
+    --orange-1: #ffd9b8;
+    --orange-2: #e8a46b;
+
+    --peach: #ffe9d6;
+    --mint: #eef7ea;
+    --cream: #fffdf8;
+
+    --shadow: 0 18px 40px rgba(98, 127, 104, 0.12);
+    --overlay: rgba(39, 48, 41, 0.72);
 }
 
 * {
@@ -21,9 +29,10 @@ html, body {
     font-family: 'Inter', system-ui, sans-serif;
     color: var(--text);
     background:
-        radial-gradient(circle at top, rgba(255, 209, 220, 0.12), transparent 30%),
-        radial-gradient(circle at bottom, rgba(255, 222, 173, 0.12), transparent 25%),
-        linear-gradient(180deg, #15111b 0%, #0f0d13 45%, #17121d 100%);
+        radial-gradient(circle at top left, rgba(216, 234, 214, 0.75), transparent 32%),
+        radial-gradient(circle at top right, rgba(255, 217, 184, 0.65), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(238, 247, 234, 0.80), transparent 28%),
+        linear-gradient(180deg, #fdfcf7 0%, #f6f4eb 45%, #eef4ea 100%);
     overflow-x: hidden;
 }
 
@@ -39,24 +48,24 @@ body {
     position: fixed;
     border-radius: 999px;
     filter: blur(80px);
-    opacity: 0.45;
+    opacity: 0.50;
     z-index: 0;
     pointer-events: none;
 }
 
 .bg-glow-1 {
-    width: 260px;
-    height: 260px;
-    background: rgba(255, 204, 134, 0.22);
-    top: 80px;
+    width: 280px;
+    height: 280px;
+    background: rgba(149, 192, 156, 0.30);
+    top: 70px;
     left: 8%;
     animation: breathe 8s ease-in-out infinite;
 }
 
 .bg-glow-2 {
-    width: 320px;
-    height: 320px;
-    background: rgba(244, 170, 205, 0.18);
+    width: 340px;
+    height: 340px;
+    background: rgba(244, 182, 127, 0.28);
     bottom: 80px;
     right: 10%;
     animation: breathe 9.5s ease-in-out infinite reverse;
@@ -67,8 +76,8 @@ body {
     width: 7px;
     height: 7px;
     border-radius: 999px;
-    background: rgba(255,255,255,.8);
-    box-shadow: 0 0 16px rgba(255,255,255,.75);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.95);
     animation: twinkle 4s ease-in-out infinite;
     z-index: 0;
 }
@@ -99,14 +108,22 @@ body {
     width: min(100%, 205px);
     aspect-ratio: 4 / 5;
     padding: 8px;
-    background: rgba(255,255,255,.1);
-    border: 1px solid rgba(255,255,255,.16);
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(143, 181, 151, 0.25);
     border-radius: 26px;
     backdrop-filter: blur(10px);
     box-shadow: var(--shadow);
     overflow: hidden;
     transform-origin: center;
     animation: floatCard 6.5s ease-in-out infinite;
+    cursor: pointer;
+    transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+
+.photo-card:hover {
+    transform: translateY(-6px) scale(1.02) rotate(var(--rot, 0deg));
+    box-shadow: 0 20px 35px rgba(106, 123, 108, 0.18);
+    border-color: rgba(232, 164, 107, 0.45);
 }
 
 .photo-card img {
@@ -139,20 +156,12 @@ body {
 .hero-card {
     width: min(100%, 920px);
     margin-top: 36px;
-    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-    border: 1px solid var(--stroke);
+    background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.52));
+    border: 1px solid rgba(143, 181, 151, 0.22);
     border-radius: 34px;
     padding: 34px 28px 30px;
     box-shadow: var(--shadow);
     backdrop-filter: blur(16px);
-}
-
-.eyebrow {
-    margin: 0 0 12px;
-    letter-spacing: .24em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-size: .78rem;
 }
 
 h1, h2 {
@@ -163,6 +172,7 @@ h1 {
     margin: 0;
     font-size: clamp(2.5rem, 4vw, 4.2rem);
     line-height: 0.95;
+    color: #344734;
 }
 
 .subtitle {
@@ -185,29 +195,29 @@ h1 {
     overflow: hidden;
     border-radius: 28px;
     padding: 24px 20px 22px;
-    border: 1px solid rgba(255,255,255,.16);
-    background: rgba(16, 15, 24, .72);
+    border: 1px solid rgba(143, 181, 151, 0.20);
+    background: rgba(255, 253, 248, 0.82);
     transition: transform .35s ease, box-shadow .35s ease;
 }
 
 .countdown-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 22px 36px rgba(0,0,0,.26);
+    box-shadow: 0 22px 36px rgba(106, 123, 108, 0.16);
 }
 
 .card-topline {
     width: 100%;
-    height: 4px;
+    height: 5px;
     border-radius: 999px;
     margin-bottom: 18px;
 }
 
 .countdown-card.gold .card-topline {
-    background: linear-gradient(90deg, var(--gold-1), var(--gold-2));
+    background: linear-gradient(90deg, var(--green-1), var(--green-2));
 }
 
 .countdown-card.rose .card-topline {
-    background: linear-gradient(90deg, var(--rose-1), var(--rose-2));
+    background: linear-gradient(90deg, var(--orange-1), var(--orange-2));
 }
 
 .countdown-title {
@@ -216,10 +226,23 @@ h1 {
     font-size: 0.92rem;
 }
 
+.special-title {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #47614a;
+    text-transform: uppercase;
+}
+
+.countdown-card.rose .special-title {
+    color: #a76833;
+}
+
 .countdown-card h2 {
-    margin: 8px 0 18px;
+    margin: 10px 0 18px;
     font-size: clamp(2rem, 2.6vw, 2.7rem);
     line-height: 1;
+    color: #334634;
 }
 
 .timer {
@@ -236,13 +259,14 @@ h1 {
     gap: 6px;
     padding: 14px 8px;
     border-radius: 20px;
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.62);
+    border: 1px solid rgba(143, 181, 151, 0.16);
 }
 
 .value {
     font-size: clamp(1.5rem, 2vw, 2.2rem);
     font-weight: 700;
+    color: #344734;
 }
 
 .unit {
@@ -262,8 +286,58 @@ h1 {
     right: 0;
     bottom: 18px;
     text-align: center;
-    color: rgba(247, 242, 235, .65);
+    color: rgba(52, 71, 52, 0.65);
     font-size: .88rem;
+}
+
+/* LIGHTBOX */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .25s ease, visibility .25s ease;
+}
+
+.lightbox.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lightbox img {
+    max-width: min(92vw, 980px);
+    max-height: 88vh;
+    border-radius: 22px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+    border: 5px solid rgba(255,255,255,.78);
+    object-fit: contain;
+    background: #fff;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 999px;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    background: rgba(255,255,255,.92);
+    color: #466048;
+    box-shadow: 0 8px 20px rgba(0,0,0,.12);
+}
+
+.lightbox-close:hover {
+    transform: scale(1.06);
 }
 
 @keyframes floatCard {
@@ -353,5 +427,10 @@ h1 {
 
     .value {
         font-size: 1.8rem;
+    }
+
+    .lightbox-close {
+        top: 14px;
+        right: 14px;
     }
 }
