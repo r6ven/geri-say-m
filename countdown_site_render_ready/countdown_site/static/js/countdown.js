@@ -24,3 +24,40 @@ function tick() {
 
 tick();
 setInterval(tick, 1000);
+
+/* FOTOĞRAF BÜYÜTME */
+const galleryImages = document.querySelectorAll('.gallery-image');
+const lightbox = document.getElementById('lightbox');
+const lightboxImage = document.getElementById('lightboxImage');
+const lightboxClose = document.getElementById('lightboxClose');
+
+galleryImages.forEach((img) => {
+    img.addEventListener('click', () => {
+        lightboxImage.src = img.src;
+        lightboxImage.alt = img.alt;
+        lightbox.classList.add('active');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    });
+});
+
+function closeLightbox() {
+    lightbox.classList.remove('active');
+    lightbox.setAttribute('aria-hidden', 'true');
+    lightboxImage.src = '';
+    document.body.style.overflow = '';
+}
+
+lightboxClose.addEventListener('click', closeLightbox);
+
+lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+        closeLightbox();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+        closeLightbox();
+    }
+});
