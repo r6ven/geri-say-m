@@ -101,5 +101,606 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/countdown.js') }}"></script>
+    <!-- QUIZ + SÜRPRİZ FOTOĞRAF BAŞLANGICI -->
+<div class="qs-overlay" id="qsOverlay" aria-hidden="true">
+    <div class="qs-card">
+        <div id="qsContent"></div>
+    </div>
+</div>
+
+<div class="qs-photo-modal" id="qsPhotoModal" aria-hidden="true">
+    <div class="qs-photo-card">
+        <button class="qs-close" id="qsClose" aria-label="Kapat">×</button>
+
+        <div class="qs-photo-stage">
+            <img
+                id="qsPhotoImage"
+                src="{{ url_for('static', filename='photos/surpriz.jpg') }}"
+                alt="Sürpriz fotoğraf"
+            >
+        </div>
+
+        <div class="qs-photo-tools">
+            <button type="button" class="qs-tool-btn" id="qsZoomIn">Yakınlaş +</button>
+            <button type="button" class="qs-tool-btn" id="qsZoomOut">Uzaklaş -</button>
+            <button type="button" class="qs-tool-btn" id="qsZoomReset">Sıfırla</button>
+
+            <a
+                class="qs-download-btn"
+                href="{{ url_for('static', filename='photos/surpriz.jpg') }}"
+                download
+            >
+                Fotoğrafı indir
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.qs-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(43, 53, 44, 0.62);
+    backdrop-filter: blur(8px);
+    z-index: 10020;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.qs-overlay.active {
+    display: flex;
+}
+
+.qs-card {
+    width: min(92vw, 560px);
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(143, 181, 151, 0.28);
+    border-radius: 28px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+    padding: 26px 22px;
+    animation: qsPop .28s ease;
+}
+
+.qs-step-top {
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6f856f;
+    margin-bottom: 10px;
+}
+
+.qs-title {
+    margin: 0 0 10px;
+    font-size: 1.55rem;
+    line-height: 1.25;
+    color: #334634;
+    font-family: 'Cormorant Garamond', serif;
+}
+
+.qs-text {
+    margin: 0 0 18px;
+    color: #637563;
+    line-height: 1.65;
+    font-size: 0.98rem;
+}
+
+.qs-actions,
+.qs-actions-stack {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.qs-actions-stack {
+    flex-direction: column;
+}
+
+.qs-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 12px 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .18s ease, opacity .18s ease, box-shadow .18s ease;
+    box-shadow: 0 8px 18px rgba(0,0,0,.07);
+}
+
+.qs-btn:hover {
+    transform: translateY(-1px);
+}
+
+.qs-btn-green {
+    background: #d8ead6;
+    color: #35533a;
+}
+
+.qs-btn-orange {
+    background: #ffd9b8;
+    color: #8a5b2b;
+}
+
+.qs-btn-soft {
+    background: #eef7ea;
+    color: #466048;
+}
+
+.qs-btn-disabled {
+    background: #ece9e2;
+    color: #978d82;
+    cursor: not-allowed;
+    opacity: .9;
+}
+
+.qs-input-wrap {
+    margin-top: 14px;
+}
+
+.qs-input-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #5f6f60;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.qs-input {
+    width: 100%;
+    border: 1px solid rgba(143, 181, 151, 0.28);
+    border-radius: 16px;
+    padding: 13px 14px;
+    font-size: 1rem;
+    outline: none;
+    background: rgba(255,255,255,.96);
+    color: #334634;
+}
+
+.qs-input:focus {
+    border-color: rgba(232, 164, 107, 0.7);
+    box-shadow: 0 0 0 4px rgba(255, 217, 184, 0.28);
+}
+
+.qs-feedback {
+    margin-top: 14px;
+    min-height: 24px;
+    color: #9b5a27;
+    font-weight: 600;
+    font-size: 0.94rem;
+}
+
+.qs-photo-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(39, 48, 41, 0.82);
+    z-index: 10030;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.qs-photo-modal.active {
+    display: flex;
+}
+
+.qs-photo-card {
+    position: relative;
+    width: min(94vw, 900px);
+    max-height: 92vh;
+    background: rgba(255,255,255,.97);
+    border-radius: 26px;
+    padding: 18px 18px 16px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+    animation: qsPop .28s ease;
+}
+
+.qs-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255,255,255,.96);
+    color: #466048;
+    font-size: 1.8rem;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(0,0,0,.10);
+    z-index: 2;
+}
+
+.qs-photo-stage {
+    width: 100%;
+    height: min(72vh, 720px);
+    overflow: auto;
+    border-radius: 18px;
+    background: #f8f6ef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+}
+
+#qsPhotoImage {
+    max-width: 100%;
+    max-height: none;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(0,0,0,.10);
+    transform-origin: center center;
+    transition: transform .18s ease;
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.qs-photo-tools {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.qs-tool-btn,
+.qs-download-btn {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform .18s ease;
+}
+
+.qs-tool-btn {
+    background: #eef7ea;
+    color: #466048;
+}
+
+.qs-download-btn {
+    background: #ffd9b8;
+    color: #8a5b2b;
+}
+
+.qs-tool-btn:hover,
+.qs-download-btn:hover {
+    transform: translateY(-1px);
+}
+
+.special-surprise-card {
+    position: relative;
+    border: 2px solid rgba(232, 164, 107, 0.55) !important;
+    box-shadow:
+        0 18px 40px rgba(98, 127, 104, 0.16),
+        0 0 0 6px rgba(255, 217, 184, 0.22) !important;
+    background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,248,240,.76)) !important;
+}
+
+.special-surprise-card::after {
+    content: "Sürpriz";
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(255,255,255,.94);
+    color: #8a5b2b;
+    border: 1px solid rgba(232, 164, 107, 0.35);
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+}
+
+@keyframes qsPop {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 640px) {
+    .qs-card {
+        padding: 22px 16px;
+    }
+
+    .qs-title {
+        font-size: 1.35rem;
+    }
+
+    .qs-photo-card {
+        padding: 14px 14px 14px;
+    }
+
+    .qs-photo-stage {
+        height: 60vh;
+    }
+
+    .qs-actions {
+        flex-direction: column;
+    }
+
+    .qs-btn {
+        width: 100%;
+    }
+}
+</style>
+
+<script>
+(function () {
+    const STORAGE_TEST_PASSED = 'seyda_surprise_test_passed_v2';
+    const STORAGE_SURPRISE_UNLOCKED = 'seyda_surprise_photo_unlocked_v2';
+
+    const overlay = document.getElementById('qsOverlay');
+    const content = document.getElementById('qsContent');
+    const photoModal = document.getElementById('qsPhotoModal');
+    const closeBtn = document.getElementById('qsClose');
+    const photoImage = document.getElementById('qsPhotoImage');
+    const zoomInBtn = document.getElementById('qsZoomIn');
+    const zoomOutBtn = document.getElementById('qsZoomOut');
+    const zoomResetBtn = document.getElementById('qsZoomReset');
+
+    const surpriseSrc = "{{ url_for('static', filename='photos/surpriz.jpg') }}";
+    const rightRail = document.querySelector('.photo-rail-right') || document.querySelector('.photo-rail');
+    let zoomLevel = 1;
+
+    function openOverlay() {
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeOverlay() {
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    function openPhotoModal() {
+        photoModal.classList.add('active');
+        photoModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        localStorage.setItem(STORAGE_SURPRISE_UNLOCKED, 'true');
+        renderSurprisePhotoCard();
+    }
+
+    function closePhotoModal() {
+        photoModal.classList.remove('active');
+        photoModal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    function applyZoom() {
+        photoImage.style.transform = `scale(${zoomLevel})`;
+    }
+
+    function resetZoom() {
+        zoomLevel = 1;
+        applyZoom();
+    }
+
+    function renderSurprisePhotoCard() {
+        if (!rightRail) return;
+        if (document.getElementById('specialSurpriseCard')) return;
+
+        const figure = document.createElement('figure');
+        figure.className = 'photo-card special-surprise-card';
+        figure.id = 'specialSurpriseCard';
+        figure.style.setProperty('--rot', '3deg');
+
+        figure.innerHTML = `
+            <img src="${surpriseSrc}" alt="Sürpriz fotoğraf">
+        `;
+
+        figure.addEventListener('click', openPhotoModal);
+        rightRail.prepend(figure);
+    }
+
+    function normalizeName(value) {
+        return value
+            .trim()
+            .toLocaleLowerCase('tr-TR')
+            .replace(/ş/g, 's');
+    }
+
+    function showQuestion1() {
+        content.innerHTML = `
+            <div class="qs-step-top">Soru 1 / 3</div>
+            <h3 class="qs-title">Beni seviyor musun?</h3>
+            <p class="qs-text">Bu test çok ciddi. Minik bir kalp yoklaması yapıyoruz.</p>
+
+            <div class="qs-actions">
+                <button class="qs-btn qs-btn-green" id="qsQ1Yes">Evet</button>
+                <button class="qs-btn qs-btn-orange" id="qsQ1No">Hayır</button>
+            </div>
+
+            <div class="qs-feedback" id="qsFeedback"></div>
+        `;
+
+        document.getElementById('qsQ1Yes').addEventListener('click', showQuestion2);
+        document.getElementById('qsQ1No').addEventListener('click', function () {
+            document.getElementById('qsFeedback').textContent = 'Bu cevap kabul edilmedi. Bir daha düşün bakalım.';
+        });
+    }
+
+    function showQuestion2() {
+        content.innerHTML = `
+            <div class="qs-step-top">Soru 2 / 3</div>
+            <h3 class="qs-title">Beraber ilk içtiğimiz içecek neydi?</h3>
+            <p class="qs-text">Burada hafızaya küçük bir ışık tutuyoruz.</p>
+
+            <div class="qs-actions">
+                <button class="qs-btn qs-btn-green" id="qsQ2Coffee">Filtre kahve</button>
+                <button class="qs-btn qs-btn-orange" id="qsQ2Latte">Latte</button>
+            </div>
+
+            <div class="qs-feedback" id="qsFeedback"></div>
+        `;
+
+        document.getElementById('qsQ2Coffee').addEventListener('click', showQuestion3);
+        document.getElementById('qsQ2Latte').addEventListener('click', function () {
+            document.getElementById('qsFeedback').textContent = 'Bu da değil. Biraz daha düşün.';
+        });
+    }
+
+    function showQuestion3() {
+        content.innerHTML = `
+            <div class="qs-step-top">Soru 3 / 3</div>
+            <h3 class="qs-title">En sevdiğim çiçek nedir?</h3>
+            <p class="qs-text">İpucu: Bazen seçeneklerin dışında bir cevap daha vardır.</p>
+
+            <div class="qs-actions">
+                <button class="qs-btn qs-btn-soft" id="qsQ3Jasmine">Yasemin</button>
+                <button class="qs-btn qs-btn-soft" id="qsQ3Lily">Zambak</button>
+            </div>
+
+            <div class="qs-input-wrap">
+                <label class="qs-input-label" for="qsNameInput">Üçüncü seçeneğin varsa buraya yaz:</label>
+                <input
+                    id="qsNameInput"
+                    class="qs-input"
+                    type="text"
+                    placeholder="Cevabını buraya yaz"
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="qs-actions" style="margin-top:14px;">
+                <button class="qs-btn qs-btn-green" id="qsQ3Continue">Devam</button>
+            </div>
+
+            <div class="qs-feedback" id="qsFeedback"></div>
+        `;
+
+        const feedback = document.getElementById('qsFeedback');
+
+        document.getElementById('qsQ3Jasmine').addEventListener('click', function () {
+            feedback.textContent = 'Güzel cevap ama aradığımız bu değil.';
+        });
+
+        document.getElementById('qsQ3Lily').addEventListener('click', function () {
+            feedback.textContent = 'Yaklaştın gibi ama doğru cevap bu değil.';
+        });
+
+        document.getElementById('qsQ3Continue').addEventListener('click', function () {
+            const inputValue = document.getElementById('qsNameInput').value;
+            const normalized = normalizeName(inputValue);
+
+            if (normalized === 'seyda') {
+                localStorage.setItem(STORAGE_TEST_PASSED, 'true');
+                showCongrats();
+            } else {
+                feedback.textContent = 'Burada özel bir cevap bekleniyordu. Bir kez daha dene.';
+            }
+        });
+    }
+
+    function showCongrats() {
+        content.innerHTML = `
+            <div class="qs-step-top">Test tamamlandı</div>
+            <h3 class="qs-title">Tebrikler canım nişanlım.</h3>
+            <p class="qs-text">Harikasın. Seni çok seviyorum.</p>
+
+            <div class="qs-actions">
+                <button class="qs-btn qs-btn-green" id="qsGoReady">Devam</button>
+            </div>
+        `;
+
+        document.getElementById('qsGoReady').addEventListener('click', showReadyScreen);
+    }
+
+    function showReadyScreen() {
+        content.innerHTML = `
+            <div class="qs-step-top">Sürpriz zamanı</div>
+            <h3 class="qs-title">Sürpriz fotoğraf için hazır mısın?</h3>
+            <p class="qs-text">Bence burada doğru düğme zaten belli gibi duruyor.</p>
+
+            <div class="qs-actions">
+                <button class="qs-btn qs-btn-green" id="qsReadyYes">Evet</button>
+                <button class="qs-btn qs-btn-disabled" id="qsReadyNo" disabled>Hayır</button>
+            </div>
+        `;
+
+        document.getElementById('qsReadyYes').addEventListener('click', function () {
+            closeOverlay();
+            openPhotoModal();
+        });
+    }
+
+    zoomInBtn.addEventListener('click', function () {
+        zoomLevel = Math.min(zoomLevel + 0.2, 3);
+        applyZoom();
+    });
+
+    zoomOutBtn.addEventListener('click', function () {
+        zoomLevel = Math.max(zoomLevel - 0.2, 0.6);
+        applyZoom();
+    });
+
+    zoomResetBtn.addEventListener('click', resetZoom);
+
+    closeBtn.addEventListener('click', function () {
+        closePhotoModal();
+        resetZoom();
+    });
+
+    photoModal.addEventListener('click', function (e) {
+        if (e.target === photoModal) {
+            closePhotoModal();
+            resetZoom();
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            if (photoModal.classList.contains('active')) {
+                closePhotoModal();
+                resetZoom();
+            }
+        }
+    });
+
+    photoImage.addEventListener('dblclick', function () {
+        if (zoomLevel < 2) {
+            zoomLevel = 2;
+        } else {
+            zoomLevel = 1;
+        }
+        applyZoom();
+    });
+
+    const testPassed = localStorage.getItem(STORAGE_TEST_PASSED) === 'true';
+    const surpriseUnlocked = localStorage.getItem(STORAGE_SURPRISE_UNLOCKED) === 'true';
+
+    if (surpriseUnlocked) {
+        renderSurprisePhotoCard();
+    }
+
+    if (!testPassed) {
+        openOverlay();
+        content.innerHTML = `
+            <div class="qs-step-top">Mini test</div>
+            <h3 class="qs-title">Bir dizi soru hazırladım.</h3>
+            <p class="qs-text">Eğer testi geçersen sürpriz fotoğrafı göreceksin.</p>
+
+            <div class="qs-actions">
+                <button class="qs-btn qs-btn-green" id="qsStartTest">Teste başla</button>
+            </div>
+        `;
+
+        document.getElementById('qsStartTest').addEventListener('click', showQuestion1);
+    } else if (testPassed && !surpriseUnlocked) {
+        openOverlay();
+        showReadyScreen();
+    }
+})();
+</script>
+<!-- QUIZ + SÜRPRİZ FOTOĞRAF BİTİŞİ -->
 </body>
 </html>
