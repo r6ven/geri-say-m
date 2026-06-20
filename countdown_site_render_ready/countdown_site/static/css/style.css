@@ -1,436 +1,246 @@
-:root {
-    --bg: #f5f4ec;
-    --bg-soft: rgba(255, 255, 255, 0.50);
-    --stroke: rgba(98, 127, 104, 0.18);
-    --text: #324236;
-    --muted: #6a7b6c;
-
-    --green-1: #d8ead6;
-    --green-2: #8fb597;
-
-    --orange-1: #ffd9b8;
-    --orange-2: #e8a46b;
-
-    --peach: #ffe9d6;
-    --mint: #eef7ea;
-    --cream: #fffdf8;
-
-    --shadow: 0 18px 40px rgba(98, 127, 104, 0.12);
-    --overlay: rgba(39, 48, 41, 0.72);
-}
-
-* {
-    box-sizing: border-box;
-}
-
-html, body {
-    margin: 0;
-    min-height: 100%;
-    font-family: 'Inter', system-ui, sans-serif;
-    color: var(--text);
-    background:
-        radial-gradient(circle at top left, rgba(216, 234, 214, 0.75), transparent 32%),
-        radial-gradient(circle at top right, rgba(255, 217, 184, 0.65), transparent 30%),
-        radial-gradient(circle at bottom left, rgba(238, 247, 234, 0.80), transparent 28%),
-        linear-gradient(180deg, #fdfcf7 0%, #f6f4eb 45%, #eef4ea 100%);
-    overflow-x: hidden;
-}
-
-body {
+/* NİKAH SÜRPRİZ VİDEO */
+.countdown-card.nikah-surprise-locked {
     position: relative;
-    display: grid;
-    grid-template-columns: minmax(180px, 240px) minmax(320px, 1fr) minmax(180px, 240px);
-    gap: 20px;
-    padding: 24px 18px 80px;
 }
 
-.bg-glow {
-    position: fixed;
-    border-radius: 999px;
-    filter: blur(80px);
-    opacity: 0.50;
-    z-index: 0;
+.countdown-card.nikah-surprise-locked .card-topline,
+.countdown-card.nikah-surprise-locked .special-title,
+.countdown-card.nikah-surprise-locked h2,
+.countdown-card.nikah-surprise-locked .timer,
+.countdown-card.nikah-surprise-locked .card-note {
+    filter: blur(5px);
+    opacity: 0.45;
     pointer-events: none;
+    user-select: none;
 }
 
-.bg-glow-1 {
-    width: 280px;
-    height: 280px;
-    background: rgba(149, 192, 156, 0.30);
-    top: 70px;
-    left: 8%;
-    animation: breathe 8s ease-in-out infinite;
-}
-
-.bg-glow-2 {
-    width: 340px;
-    height: 340px;
-    background: rgba(244, 182, 127, 0.28);
-    bottom: 80px;
-    right: 10%;
-    animation: breathe 9.5s ease-in-out infinite reverse;
-}
-
-.sparkles span {
-    position: fixed;
-    width: 7px;
-    height: 7px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 0 16px rgba(255, 255, 255, 0.95);
-    animation: twinkle 4s ease-in-out infinite;
-    z-index: 0;
-}
-
-.sparkles span:nth-child(1) { top: 12%; left: 24%; animation-delay: 0s; }
-.sparkles span:nth-child(2) { top: 26%; right: 18%; animation-delay: 1s; }
-.sparkles span:nth-child(3) { bottom: 18%; left: 15%; animation-delay: 2s; }
-.sparkles span:nth-child(4) { bottom: 28%; right: 24%; animation-delay: 3s; }
-.sparkles span:nth-child(5) { top: 52%; left: 8%; animation-delay: 1.5s; }
-.sparkles span:nth-child(6) { top: 58%; right: 10%; animation-delay: 2.5s; }
-
-.photo-rail,
-.content-shell,
-.footer {
-    position: relative;
-    z-index: 1;
-}
-
-.photo-rail {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-    padding-top: 18px;
-}
-
-.photo-card {
-    width: min(100%, 205px);
-    aspect-ratio: 4 / 5;
-    padding: 8px;
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(143, 181, 151, 0.25);
-    border-radius: 26px;
-    backdrop-filter: blur(10px);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    transform-origin: center;
-    animation: floatCard 6.5s ease-in-out infinite;
-    cursor: pointer;
-    transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
-}
-
-.photo-card:hover {
-    transform: translateY(-6px) scale(1.02) rotate(var(--rot, 0deg));
-    box-shadow: 0 20px 35px rgba(106, 123, 108, 0.18);
-    border-color: rgba(232, 164, 107, 0.45);
-}
-
-.photo-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 18px;
-    display: block;
-}
-
-.photo-card-1 { transform: rotate(-7deg); animation-delay: 0s; }
-.photo-card-2 { transform: rotate(5deg); animation-delay: 1s; }
-.photo-card-3 { transform: rotate(-4deg); animation-delay: 2s; }
-.photo-card-4 { transform: rotate(6deg); animation-delay: 1.5s; }
-.photo-card-5 { transform: rotate(-5deg); animation-delay: 0.5s; }
-.photo-card-6 { transform: rotate(4deg); animation-delay: 2.5s; }
-.photo-card-7 { transform: rotate(6deg); animation-delay: .2s; }
-.photo-card-8 { transform: rotate(-5deg); animation-delay: 1.2s; }
-.photo-card-9 { transform: rotate(4deg); animation-delay: 2.2s; }
-.photo-card-10 { transform: rotate(-6deg); animation-delay: .8s; }
-.photo-card-11 { transform: rotate(5deg); animation-delay: 1.8s; }
-.photo-card-12 { transform: rotate(-4deg); animation-delay: 2.8s; }
-
-.content-shell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.hero-card {
-    width: min(100%, 920px);
-    margin-top: 36px;
-    background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.52));
-    border: 1px solid rgba(143, 181, 151, 0.22);
-    border-radius: 34px;
-    padding: 34px 28px 30px;
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(16px);
-}
-
-h1, h2 {
-    font-family: 'Cormorant Garamond', serif;
-}
-
-h1 {
-    margin: 0;
-    font-size: clamp(2.5rem, 4vw, 4.2rem);
-    line-height: 0.95;
-    color: #344734;
-}
-
-.subtitle {
-    margin: 16px 0 0;
-    font-size: 1.03rem;
-    color: var(--muted);
-    max-width: 620px;
-    line-height: 1.7;
-}
-
-.countdown-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(280px, 1fr));
-    gap: 22px;
-    margin-top: 34px;
-}
-
-.countdown-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 28px;
-    padding: 24px 20px 22px;
-    border: 1px solid rgba(143, 181, 151, 0.20);
-    background: rgba(255, 253, 248, 0.82);
-    transition: transform .35s ease, box-shadow .35s ease;
-}
-
-.countdown-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 22px 36px rgba(106, 123, 108, 0.16);
-}
-
-.card-topline {
-    width: 100%;
-    height: 5px;
-    border-radius: 999px;
-    margin-bottom: 18px;
-}
-
-.countdown-card.gold .card-topline {
-    background: linear-gradient(90deg, var(--green-1), var(--green-2));
-}
-
-.countdown-card.rose .card-topline {
-    background: linear-gradient(90deg, var(--orange-1), var(--orange-2));
-}
-
-.countdown-title {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.92rem;
-}
-
-.special-title {
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: #47614a;
-    text-transform: uppercase;
-}
-
-.countdown-card.rose .special-title {
-    color: #a76833;
-}
-
-.countdown-card h2 {
-    margin: 10px 0 18px;
-    font-size: clamp(2rem, 2.6vw, 2.7rem);
-    line-height: 1;
-    color: #334634;
-}
-
-.timer {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(68px, 1fr));
-    gap: 12px;
-}
-
-.time-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 14px 8px;
-    border-radius: 20px;
-    background: rgba(255,255,255,.62);
-    border: 1px solid rgba(143, 181, 151, 0.16);
-}
-
-.value {
-    font-size: clamp(1.5rem, 2vw, 2.2rem);
-    font-weight: 700;
-    color: #344734;
-}
-
-.unit {
-    font-size: .82rem;
-    color: var(--muted);
-}
-
-.card-note {
-    margin: 18px 0 0;
-    color: var(--muted);
-    font-size: .95rem;
-}
-
-.footer {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 18px;
-    text-align: center;
-    color: rgba(52, 71, 52, 0.65);
-    font-size: .88rem;
-}
-
-/* LIGHTBOX */
-.lightbox {
-    position: fixed;
-    inset: 0;
-    background: var(--overlay);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    z-index: 9999;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity .25s ease, visibility .25s ease;
-}
-
-.lightbox.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.lightbox img {
-    max-width: min(92vw, 980px);
-    max-height: 88vh;
-    border-radius: 22px;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
-    border: 5px solid rgba(255,255,255,.78);
-    object-fit: contain;
-    background: #fff;
-}
-
-.lightbox-close {
+.nikah-surprise-overlay {
     position: absolute;
-    top: 22px;
-    right: 22px;
-    width: 48px;
-    height: 48px;
+    inset: 12px;
+    z-index: 8;
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    background:
+        radial-gradient(circle at top left, rgba(255, 217, 232, 0.80), transparent 42%),
+        radial-gradient(circle at bottom right, rgba(255, 217, 184, 0.72), transparent 44%),
+        rgba(255, 255, 255, 0.58);
+    border: 1px solid rgba(232, 164, 188, 0.38);
+    backdrop-filter: blur(8px);
+    animation: nikahOverlayIn .32s ease;
+}
+
+.nikah-surprise-message {
+    text-align: center;
+    max-width: 360px;
+}
+
+.nikah-surprise-message h3 {
+    margin: 0 0 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    color: #7b4a61;
+}
+
+.nikah-surprise-message p {
+    margin: 0 0 18px;
+    color: #674c58;
+    line-height: 1.55;
+    font-weight: 600;
+}
+
+.nikah-watch-btn {
     border: none;
     border-radius: 999px;
-    font-size: 2rem;
-    line-height: 1;
+    padding: 12px 24px;
+    font-weight: 800;
     cursor: pointer;
-    background: rgba(255,255,255,.92);
-    color: #466048;
-    box-shadow: 0 8px 20px rgba(0,0,0,.12);
+    color: #7b4a61;
+    background: linear-gradient(135deg, #ffd7e8, #ffe4c4);
+    box-shadow: 0 12px 24px rgba(123, 74, 97, 0.18);
+    transition: transform .18s ease, box-shadow .18s ease;
 }
 
-.lightbox-close:hover {
-    transform: scale(1.06);
+.nikah-watch-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 30px rgba(123, 74, 97, 0.22);
 }
 
-@keyframes floatCard {
-    0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
-    50% { transform: translateY(-10px) rotate(calc(var(--rot, 0deg) + 1.5deg)); }
+.nikah-video-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10060;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(39, 48, 41, 0.82);
+    backdrop-filter: blur(8px);
 }
 
-.photo-card-1 { --rot: -7deg; }
-.photo-card-2 { --rot: 5deg; }
-.photo-card-3 { --rot: -4deg; }
-.photo-card-4 { --rot: 6deg; }
-.photo-card-5 { --rot: -5deg; }
-.photo-card-6 { --rot: 4deg; }
-.photo-card-7 { --rot: 6deg; }
-.photo-card-8 { --rot: -5deg; }
-.photo-card-9 { --rot: 4deg; }
-.photo-card-10 { --rot: -6deg; }
-.photo-card-11 { --rot: 5deg; }
-.photo-card-12 { --rot: -4deg; }
-
-@keyframes twinkle {
-    0%, 100% { opacity: .2; transform: scale(.8); }
-    50% { opacity: 1; transform: scale(1.4); }
+.nikah-video-modal.active {
+    display: flex;
 }
 
-@keyframes breathe {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.12); }
+.nikah-video-card {
+    position: relative;
+    width: min(94vw, 920px);
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: 26px;
+    padding: 18px;
+    box-shadow: 0 28px 70px rgba(0,0,0,.28);
+    animation: nikahModalIn .28s ease;
 }
 
-@media (max-width: 1200px) {
-    body {
-        grid-template-columns: minmax(120px, 190px) minmax(320px, 1fr) minmax(120px, 190px);
+.nikah-video-card video {
+    width: 100%;
+    max-height: 74vh;
+    display: block;
+    border-radius: 18px;
+    background: #111;
+}
+
+.nikah-video-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255,255,255,.96);
+    color: #7b4a61;
+    font-size: 1.9rem;
+    cursor: pointer;
+    z-index: 3;
+    box-shadow: 0 8px 18px rgba(0,0,0,.14);
+}
+
+.nikah-video-tools {
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+}
+
+.nikah-download-btn {
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 11px 18px;
+    font-weight: 800;
+    color: #7b4a61;
+    background: #ffd7e8;
+}
+
+.nikah-replay-box {
+    position: fixed;
+    left: 18px;
+    bottom: 72px;
+    z-index: 1000;
+    width: min(310px, calc(100vw - 36px));
+    padding: 14px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.88);
+    border: 1px solid rgba(232, 164, 188, 0.38);
+    box-shadow: 0 18px 38px rgba(0,0,0,.12);
+    backdrop-filter: blur(12px);
+}
+
+.nikah-replay-box p {
+    margin: 0 0 10px;
+    color: #674c58;
+    font-size: .92rem;
+    line-height: 1.45;
+    font-weight: 600;
+}
+
+.nikah-replay-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.nikah-replay-actions button,
+.nikah-replay-actions a {
+    border: none;
+    border-radius: 999px;
+    padding: 9px 13px;
+    font-size: .88rem;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    color: #7b4a61;
+    background: #ffd7e8;
+}
+
+.pink-heart-pop {
+    position: fixed;
+    z-index: 10070;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: heartPop .85s ease forwards;
+    font-size: 1.25rem;
+    filter: drop-shadow(0 4px 8px rgba(123, 74, 97, 0.22));
+}
+
+@keyframes heartPop {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(.4);
     }
 
-    .photo-card {
-        width: min(100%, 170px);
+    18% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.15);
+    }
+
+    100% {
+        opacity: 0;
+        transform:
+            translate(calc(-50% + var(--tx)), calc(-50% + var(--ty)))
+            scale(.75)
+            rotate(22deg);
     }
 }
 
-@media (max-width: 980px) {
-    body {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 18px 14px 90px;
+@keyframes nikahOverlayIn {
+    from {
+        opacity: 0;
+        transform: scale(.98);
     }
 
-    .photo-rail {
-        flex-direction: row;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 12px;
-        padding-top: 0;
-    }
-
-    .photo-card {
-        width: min(30vw, 140px);
-        aspect-ratio: 1 / 1.18;
-    }
-
-    .hero-card {
-        margin-top: 6px;
-        padding: 28px 18px 22px;
-    }
-
-    .countdown-grid {
-        grid-template-columns: 1fr;
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }
 
-@media (max-width: 580px) {
-    .photo-card:nth-child(n+5) {
-        display: none;
+@keyframes nikahModalIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(.98);
     }
 
-    h1 {
-        line-height: 1;
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 640px) {
+    .nikah-replay-box {
+        left: 12px;
+        right: 12px;
+        bottom: 70px;
+        width: auto;
     }
 
-    .timer {
-        grid-template-columns: repeat(2, 1fr);
+    .nikah-video-card {
+        padding: 12px;
     }
 
-    .countdown-card h2 {
-        font-size: 2rem;
-    }
-
-    .value {
-        font-size: 1.8rem;
-    }
-
-    .lightbox-close {
-        top: 14px;
-        right: 14px;
+    .nikah-video-card video {
+        max-height: 68vh;
     }
 }
