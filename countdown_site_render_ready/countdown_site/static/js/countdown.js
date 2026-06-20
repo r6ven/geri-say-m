@@ -26,9 +26,6 @@ function tick() {
     setupNikahSurprise();
 }
 
-tick();
-setInterval(tick, 1000);
-
 /* FOTOĞRAF BÜYÜTME */
 const galleryImages = document.querySelectorAll('.gallery-image');
 const lightbox = document.getElementById('lightbox');
