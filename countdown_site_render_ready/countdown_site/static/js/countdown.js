@@ -289,3 +289,6 @@ function createHeartBurst(x, y) {
         }, 900);
     }
 }
+
+tick();
+setInterval(tick, 1000);
