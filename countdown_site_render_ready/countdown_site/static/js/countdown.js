@@ -157,7 +157,7 @@ function createNikahVideoModal() {
         <div class="nikah-video-card">
             <button type="button" class="nikah-video-close" id="nikahVideoClose" aria-label="Kapat">×</button>
 
-            <video id="nikahVideo" controls playsinline>
+            <video id="nikahVideo" controls playsinline poster="${NIKAH_POSTER_SRC}">
                 <source src="${NIKAH_VIDEO_SRC}" type="video/mp4">
                 Tarayıcın bu videoyu oynatamıyor.
             </video>
