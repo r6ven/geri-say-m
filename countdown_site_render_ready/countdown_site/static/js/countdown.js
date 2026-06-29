@@ -1,10 +1,36 @@
 function updateCountdown(card) {
+    const title = card.querySelector('.special-title')?.textContent || '';
+    const isNikahCard = title.includes('NİKAH');
+
     const targetDate = new Date(card.dataset.target).getTime();
+
+    if (Number.isNaN(targetDate)) {
+        console.error('Geçersiz geri sayım tarihi:', card.dataset.target, card);
+        card.dataset.finished = 'false';
+        return;
+    }
+
     const now = new Date().getTime();
+
     let diff = targetDate - now;
     const isFinished = diff <= 0;
 
-    if (diff < 0) diff = 0;
+    /*
+        Nikah tarihi geçince:
+        - Arka planda finished true kalır.
+        - Video sürprizi yine tetiklenir.
+        - Ekranda ileri sayım görünür.
+    */
+    if (isFinished && isNikahCard) {
+        diff = now - targetDate;
+
+        const note = card.querySelector('.card-note');
+        if (note) {
+            note.textContent = 'Nikahlı olduğumuz süre';
+        }
+    } else if (diff < 0) {
+        diff = 0;
+    }
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -289,6 +315,57 @@ function createHeartBurst(x, y) {
         }, 900);
     }
 }
+
+async function loadDailyDrivePhoto() {
+    try {
+        const today = new Date().toISOString().slice(0, 10);
+        const response = await fetch(`/api/daily-photo?v=${today}`);
+
+        if (!response.ok) {
+            console.warn('Günlük Drive fotoğrafı alınamadı.');
+            return;
+        }
+
+        const data = await response.json();
+
+        if (!data.image_url) {
+            console.warn('Günlük fotoğraf verisi eksik.', data);
+            return;
+        }
+
+        const targetCard = document.querySelector('.photo-rail-right .photo-card:first-child');
+
+        if (!targetCard) {
+            console.warn('Günlük fotoğraf için hedef fotoğraf kartı bulunamadı.');
+            return;
+        }
+
+        const targetImage = targetCard.querySelector('img');
+
+        if (!targetImage) {
+            console.warn('Günlük fotoğraf kartında img bulunamadı.');
+            return;
+        }
+
+        targetCard.classList.add('daily-drive-card');
+
+        targetImage.src = data.image_url;
+        targetImage.alt = `Günün fotoğrafı: ${data.name || ''}`;
+        targetImage.loading = 'lazy';
+
+        if (!targetCard.querySelector('.daily-drive-badge')) {
+            const badge = document.createElement('span');
+            badge.className = 'daily-drive-badge';
+            badge.textContent = 'Günün karesi';
+            targetCard.appendChild(badge);
+        }
+
+    } catch (error) {
+        console.warn('Günlük Drive fotoğrafı yüklenirken hata oluştu:', error);
+    }
+}
+
+loadDailyDrivePhoto();
 
 tick();
 setInterval(tick, 1000);
