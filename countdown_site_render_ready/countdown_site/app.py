@@ -36,7 +36,9 @@ def fetch_drive_photos():
             "key": api_key,
             "q": query,
             "fields": "nextPageToken,files(id,name,mimeType)",
-            "pageSize": "1000"
+            "pageSize": "1000",
+            "supportsAllDrives": "true",
+            "includeItemsFromAllDrives": "true"
         }
 
         if page_token:
@@ -48,12 +50,23 @@ def fetch_drive_photos():
             data = json.loads(response.read().decode("utf-8"))
 
         for file in data.get("files", []):
+            name = file.get("name", "")
+            lower_name = name.lower()
             mime_type = file.get("mimeType", "")
 
-            if mime_type.startswith("image/"):
+            is_image_by_mime = mime_type.startswith("image/")
+            is_image_by_extension = lower_name.endswith((
+                ".jpg",
+                ".jpeg",
+                ".png",
+                ".webp",
+                ".gif"
+            ))
+
+            if is_image_by_mime or is_image_by_extension:
                 photos.append({
                     "id": file["id"],
-                    "name": file.get("name", "Günün fotoğrafı"),
+                    "name": name or "Günün fotoğrafı",
                     "mime_type": mime_type
                 })
 
