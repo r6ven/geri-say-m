@@ -333,7 +333,7 @@ async function loadDailyDrivePhoto() {
             return;
         }
 
-        const targetCard = document.querySelector('.photo-rail-right .photo-card:first-child');
+        const targetCard = document.querySelector('.photo-rail-left .photo-card:first-child');
 
         if (!targetCard) {
             console.warn('Günlük fotoğraf için hedef fotoğraf kartı bulunamadı.');
