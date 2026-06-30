@@ -26,7 +26,7 @@ function updateCountdown(card) {
 
         const note = card.querySelector('.card-note');
         if (note) {
-            note.textContent = ''ŞEYDA YILMAZ BENİM KARIM' SAYACI';
+            note.textContent = "'ŞEYDA YILMAZ BENİM KARIM' Sayacı" ;
         }
     } else if (diff < 0) {
         diff = 0;
