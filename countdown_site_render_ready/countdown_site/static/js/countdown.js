@@ -1,6 +1,7 @@
 function updateCountdown(card) {
     const title = card.querySelector('.special-title')?.textContent || '';
     const isNikahCard = title.includes('NİKAH');
+    const isWeddingCard = title.includes('DÜĞÜN');
 
     const targetDate = new Date(card.dataset.target).getTime();
 
@@ -21,12 +22,14 @@ function updateCountdown(card) {
         - Video sürprizi yine tetiklenir.
         - Ekranda ileri sayım görünür.
     */
-    if (isFinished && isNikahCard) {
+    if (isFinished && (isNikahCard || isWeddingCard)) {
         diff = now - targetDate;
 
         const note = card.querySelector('.card-note');
         if (note) {
-            note.textContent = "'ŞEYDA YILMAZ BENİM KARIM' Sayacı" ;
+            note.textContent = isNikahCard
+                ? "'ŞEYDA YILMAZ BENİM KARIM' Sayacı"
+                : 'Düğünümüzün üzerinden geçen süre ❤️';
         }
     } else if (diff < 0) {
         diff = 0;
@@ -145,9 +148,12 @@ function lockNikahCard(card) {
 
     const overlay = document.createElement('div');
     overlay.className = 'nikah-surprise-overlay';
+    const dateFormat = new Intl.DateTimeFormat('tr-TR', { timeZone: 'Europe/Istanbul' });
+    const isNikahDay = dateFormat.format(new Date()) === dateFormat.format(new Date(card.dataset.target));
+    const message = isNikahDay ? 'Bugün nikah günümüz.' : 'Nikah günümüzden bir sürpriz.';
     overlay.innerHTML = `
         <div class="nikah-surprise-message">
-            <h3>Bugün nikah günümüz.</h3>
+            <h3>${message}</h3>
             <p>Seni çok seviyorum ve ufak bir sürpriz hazırladım.</p>
             <button type="button" class="nikah-watch-btn">İzle</button>
         </div>
@@ -347,18 +353,33 @@ async function loadDailyDrivePhoto() {
             return;
         }
 
-        targetCard.classList.add('daily-drive-card');
+        // Drive resmi gerçekten yüklenene kadar yerel fotoğrafı koru.
+        const localSrc = targetImage.src;
+        const localAlt = targetImage.alt;
+        const dailyImage = new Image();
+        dailyImage.onload = function () {
+            targetImage.onerror = function () {
+                targetImage.onerror = null;
+                targetImage.src = localSrc;
+                targetImage.alt = localAlt;
+                targetCard.classList.remove('daily-drive-card');
+                targetCard.querySelector('.daily-drive-badge')?.remove();
+            };
+            targetImage.src = data.image_url;
+            targetImage.alt = `Günün fotoğrafı: ${data.name || ''}`;
+            targetCard.classList.add('daily-drive-card');
 
-        targetImage.src = data.image_url;
-        targetImage.alt = `Günün fotoğrafı: ${data.name || ''}`;
-        targetImage.loading = 'lazy';
-
-        if (!targetCard.querySelector('.daily-drive-badge')) {
-            const badge = document.createElement('span');
-            badge.className = 'daily-drive-badge';
-            badge.textContent = 'Günün karesi';
-            targetCard.appendChild(badge);
-        }
+            if (!targetCard.querySelector('.daily-drive-badge')) {
+                const badge = document.createElement('span');
+                badge.className = 'daily-drive-badge';
+                badge.textContent = 'Günün karesi';
+                targetCard.appendChild(badge);
+            }
+        };
+        dailyImage.onerror = function () {
+            console.warn('Drive görseli açılamadı; yerel fotoğraf korunuyor.');
+        };
+        dailyImage.src = data.image_url;
 
     } catch (error) {
         console.warn('Günlük Drive fotoğrafı yüklenirken hata oluştu:', error);
@@ -369,3 +390,4 @@ loadDailyDrivePhoto();
 
 tick();
 setInterval(tick, 1000);
+

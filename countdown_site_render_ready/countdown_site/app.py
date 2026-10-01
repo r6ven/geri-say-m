@@ -1,6 +1,7 @@
 import os
 import json
 import hashlib
+from pathlib import Path
 import urllib.parse
 import urllib.request
 from zoneinfo import ZoneInfo
@@ -120,11 +121,15 @@ def daily_photo():
             "error": str(error)
         }), 500
 
-# Fotoğrafları static/photos içine aşağıdaki isimlerle koy:
-# photo1.jpg, photo2.jpg, ... photo12.jpg
+# Yalnızca mevcut, numaralı anı fotoğraflarını göster.
+PHOTO_DIR = Path(app.static_folder) / "photos"
 PHOTOS = [
-    {"src": f"photos/photo{i}.jpg", "alt": f"Anı fotoğrafı {i}"}
-    for i in range(1, 13)
+    {"src": f"photos/{photo.name}", "alt": f"Anı fotoğrafı {photo.stem[5:]}"}
+    for photo in sorted(
+        (photo for photo in PHOTO_DIR.glob("photo*.jpg")
+         if photo.is_file() and photo.stem[5:].isdigit()),
+        key=lambda photo: int(photo.stem[5:])
+    )
 ]
 
 COUNTDOWNS = [
@@ -132,14 +137,14 @@ COUNTDOWNS = [
         "id": "countdown1",
         "title": "Birlikte geçen zaman",
         "label": "21 Haziran 2026",
-        "target_iso": "2026-06-21T00:00:00",
+        "target_iso": "2026-06-21T00:00:00+03:00",
         "accent": "gold"
     },
     {
         "id": "countdown2",
         "title": "31 Ekim 2026'ya",
         "label": "31 Ekim 2026",
-        "target_iso": "2026-10-31T00:00:00",
+        "target_iso": "2026-10-31T00:00:00+03:00",
         "accent": "rose"
     }
 ]
@@ -155,3 +160,4 @@ def home():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
