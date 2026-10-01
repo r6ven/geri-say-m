@@ -1,163 +1,148 @@
-import os
-import json
 import hashlib
-from pathlib import Path
+import json
+import os
+import threading
+import time
 import urllib.parse
 import urllib.request
+from datetime import date, datetime
+from pathlib import Path
 from zoneinfo import ZoneInfo
-from flask import Flask, render_template, jsonify
-from datetime import datetime, timezone
+
+from flask import Flask, jsonify, render_template
 
 app = Flask(__name__)
-
-DAILY_PHOTO_CACHE = {
-    "date": None,
-    "data": None
-}
+ROOT = Path(__file__).resolve().parent
+PHOTO_DIR = ROOT / "static" / "photos"
+ISTANBUL = ZoneInfo("Europe/Istanbul")
+SITE = json.loads((ROOT / "site_config.json").read_text(encoding="utf-8"))
+IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+VIDEO_EXTENSIONS = {".mp4", ".webm", ".ogg"}
+DAILY_PHOTO_CACHE = {"date": None, "data": None, "photos": [], "listed_at": 0.0, "retry_at": 0.0}
+DAILY_PHOTO_LOCK = threading.Lock()
+LIST_TTL = 900
+RETRY_DELAY = 60
 
 
 def get_istanbul_today_key():
-    return datetime.now(ZoneInfo("Europe/Istanbul")).strftime("%Y-%m-%d")
+    return datetime.now(ISTANBUL).date().isoformat()
+
+
+def media_sort_key(path):
+    if path.stem.startswith("photo") and path.stem[5:].isdigit():
+        return (0, int(path.stem[5:]), path.name)
+    return (1, 0, path.name.casefold())
+
+
+def list_media():
+    photos, videos = [], []
+    for path in sorted(PHOTO_DIR.iterdir() if PHOTO_DIR.exists() else [], key=media_sort_key):
+        if not path.is_file():
+            continue
+        extension = path.suffix.lower()
+        if extension not in IMAGE_EXTENSIONS | VIDEO_EXTENSIONS:
+            continue
+        notes = SITE.get("media_notes", {}).get(path.name, {})
+        numbered = path.stem.startswith("photo") and path.stem[5:].isdigit()
+        default_title = f"Anı fotoğrafı {path.stem[5:]}" if numbered else path.stem.replace("-", " ")
+        item = {
+            "src": f"photos/{path.name}",
+            "title": notes.get("title", default_title),
+            "caption": notes.get("caption", "Birlikte bir an." if extension in IMAGE_EXTENSIONS else "Birlikte bir anımız."),
+            "poster": f"photos/{notes['poster']}" if notes.get("poster") and (PHOTO_DIR / notes["poster"]).is_file() else None,
+        }
+        (photos if extension in IMAGE_EXTENSIONS else videos).append(item)
+    return photos, videos
 
 
 def fetch_drive_photos():
     api_key = os.environ.get("GOOGLE_API_KEY")
     folder_id = os.environ.get("DRIVE_FOLDER_ID")
-
     if not api_key or not folder_id:
-        raise RuntimeError("GOOGLE_API_KEY veya DRIVE_FOLDER_ID eksik.")
-
-    photos = []
-    page_token = None
-
+        raise RuntimeError("Drive ayarları eksik")
+    photos, page_token = [], None
     while True:
-        query = f"'{folder_id}' in parents and trashed = false"
-
         params = {
             "key": api_key,
-            "q": query,
+            "q": f"'{folder_id}' in parents and trashed = false and mimeType contains 'image/'",
             "fields": "nextPageToken,files(id,name,mimeType)",
-            "pageSize": "1000",
-            "supportsAllDrives": "true",
-            "includeItemsFromAllDrives": "true"
+            "pageSize": "1000", "supportsAllDrives": "true", "includeItemsFromAllDrives": "true",
         }
-
         if page_token:
             params["pageToken"] = page_token
-
         url = "https://www.googleapis.com/drive/v3/files?" + urllib.parse.urlencode(params)
-
-        with urllib.request.urlopen(url, timeout=20) as response:
+        with urllib.request.urlopen(url, timeout=8) as response:
             data = json.loads(response.read().decode("utf-8"))
-
-        for file in data.get("files", []):
-            name = file.get("name", "")
-            lower_name = name.lower()
-            mime_type = file.get("mimeType", "")
-
-            is_image_by_mime = mime_type.startswith("image/")
-            is_image_by_extension = lower_name.endswith((
-                ".jpg",
-                ".jpeg",
-                ".png",
-                ".webp",
-                ".gif"
-            ))
-
-            if is_image_by_mime or is_image_by_extension:
-                photos.append({
-                    "id": file["id"],
-                    "name": name or "Günün fotoğrafı",
-                    "mime_type": mime_type
-                })
-
+        photos.extend({"id": file["id"], "name": file.get("name", "Günün fotoğrafı")}
+                      for file in data.get("files", []) if file.get("mimeType", "").startswith("image/"))
         page_token = data.get("nextPageToken")
-
         if not page_token:
             break
+    return sorted({photo["id"]: photo for photo in photos}.values(), key=lambda photo: photo["id"])
 
-    photos.sort(key=lambda item: item["name"].lower())
 
-    return photos
+def select_daily_photo(photos, today_key):
+    # Sabit, karıştırılmış sıra: bütün fotoğraflar gösterilmeden aynı fotoğraf dönmez.
+    ordered = sorted(photos, key=lambda photo: (hashlib.sha256(("daily-rotation-v1:" + photo["id"]).encode()).hexdigest(), photo["id"]))
+    day_index = (date.fromisoformat(today_key) - date(2026, 1, 1)).days
+    return ordered[day_index % len(ordered)]
 
 
 def choose_daily_photo():
     today_key = get_istanbul_today_key()
+    with DAILY_PHOTO_LOCK:
+        cached = DAILY_PHOTO_CACHE
+        now = time.monotonic()
+        if now < cached["retry_at"]:
+            if cached["data"]:
+                return {**cached["data"], "stale": cached["date"] != today_key, "retry_after_seconds": RETRY_DELAY}
+            raise RuntimeError("Drive geçici olarak kullanılamıyor")
+        try:
+            if not cached["photos"] or now - cached["listed_at"] >= LIST_TTL:
+                photos = fetch_drive_photos()
+                if not photos:
+                    raise RuntimeError("Drive klasöründe görsel bulunamadı")
+                cached["photos"], cached["listed_at"] = photos, now
+            selected = select_daily_photo(cached["photos"], today_key)
+            file_id = urllib.parse.quote(selected["id"], safe="")
+            result = {
+                "date": today_key, "name": selected["name"], "stale": False,
+                "image_url": f"https://drive.google.com/thumbnail?id={file_id}&sz=w1200",
+                "download_url": f"https://drive.google.com/uc?export=download&id={file_id}",
+            }
+            cached.update(date=today_key, data=result, retry_at=0.0)
+            return result
+        except Exception:
+            cached["retry_at"] = now + RETRY_DELAY
+            if cached["data"]:
+                app.logger.warning("Günlük fotoğraf yenilenemedi; son başarılı fotoğraf kullanılıyor.")
+                return {**cached["data"], "stale": cached["date"] != today_key, "retry_after_seconds": RETRY_DELAY}
+            raise
 
-    if DAILY_PHOTO_CACHE["date"] == today_key and DAILY_PHOTO_CACHE["data"]:
-        return DAILY_PHOTO_CACHE["data"]
 
-    photos = fetch_drive_photos()
-
-    if not photos:
-        raise RuntimeError("Drive klasöründe görsel bulunamadı.")
-
-    hash_value = hashlib.sha256(today_key.encode("utf-8")).hexdigest()
-    selected_index = int(hash_value, 16) % len(photos)
-    selected = photos[selected_index]
-
-    file_id = selected["id"]
-
-    result = {
-        "date": today_key,
-        "name": selected["name"],
-        "image_url": f"https://drive.google.com/thumbnail?id={file_id}&sz=w1200",
-        "download_url": f"https://drive.google.com/uc?export=download&id={file_id}",
-        "view_url": f"https://drive.google.com/file/d/{file_id}/view"
-    }
-
-    DAILY_PHOTO_CACHE["date"] = today_key
-    DAILY_PHOTO_CACHE["data"] = result
-
-    return result
-
-
-@app.route("/api/daily-photo")
+@app.get("/api/daily-photo")
 def daily_photo():
     try:
-        return jsonify(choose_daily_photo())
-    except Exception as error:
-        return jsonify({
-            "error": str(error)
-        }), 500
+        response = jsonify(choose_daily_photo())
+    except Exception:
+        app.logger.warning("Günlük Drive fotoğrafı alınamadı.")
+        response = jsonify({"error": "Günün karesi şu an yüklenemiyor.", "retry_after_seconds": RETRY_DELAY})
+        response.status_code = 503
+        response.headers["Retry-After"] = str(RETRY_DELAY)
+    response.headers["Cache-Control"] = "no-store"
+    return response
 
-# Yalnızca mevcut, numaralı anı fotoğraflarını göster.
-PHOTO_DIR = Path(app.static_folder) / "photos"
-PHOTOS = [
-    {"src": f"photos/{photo.name}", "alt": f"Anı fotoğrafı {photo.stem[5:]}"}
-    for photo in sorted(
-        (photo for photo in PHOTO_DIR.glob("photo*.jpg")
-         if photo.is_file() and photo.stem[5:].isdigit()),
-        key=lambda photo: int(photo.stem[5:])
-    )
-]
 
-COUNTDOWNS = [
-    {
-        "id": "countdown1",
-        "title": "Birlikte geçen zaman",
-        "label": "21 Haziran 2026",
-        "target_iso": "2026-06-21T00:00:00+03:00",
-        "accent": "gold"
-    },
-    {
-        "id": "countdown2",
-        "title": "31 Ekim 2026'ya",
-        "label": "31 Ekim 2026",
-        "target_iso": "2026-10-31T00:00:00+03:00",
-        "accent": "rose"
-    }
-]
+@app.get("/healthz")
+def health():
+    return jsonify({"status": "ok"})
 
-@app.route('/')
+
+@app.get("/")
 def home():
-    return render_template(
-        'index.html',
-        countdowns=COUNTDOWNS,
-        photos=PHOTOS,
-        year=datetime.now(timezone.utc).year
-    )
+    photos, videos = list_media()
+    return render_template("index.html", site=SITE, photos=photos, videos=videos, year=datetime.now(ISTANBUL).year)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
 
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")), debug=os.environ.get("FLASK_DEBUG") == "1")

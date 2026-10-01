@@ -3,332 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bizim Geri Sayımımız</title>
+    <meta name="theme-color" content="#eef4ea">
+    <meta name="description" content="Özel günlerimiz, birlikte geçen zaman ve anılarımız.">
+    <title>{{ site.title }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/countdown.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
 </head>
 <body>
-    <div class="bg-glow bg-glow-1"></div>
-    <div class="bg-glow bg-glow-2"></div>
-
-    <div class="sparkles" aria-hidden="true">
-        <span></span><span></span><span></span><span></span><span></span><span></span>
-    </div>
-
-    <aside class="photo-rail photo-rail-left" aria-label="Fotoğraflar sol">
-        {% for photo in photos[:6] %}
-        <figure class="photo-card photo-card-{{ loop.index }}">
-            <img
-                src="{{ url_for('static', filename=photo.src) }}"
-                alt="{{ photo.alt }}"
-                loading="lazy"
-                class="gallery-image"
-            >
-        </figure>
-        {% endfor %}
-    </aside>
-
-    <main class="content-shell">
-        <section class="hero-card">
-            <h1>Özel günlerimiz, birlikte geçen zaman</h1>
-        
-
+    <header class="site-header">
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Menüyü aç" aria-controls="siteMenu" aria-expanded="false"><span></span><span></span><span></span></button>
+        <span class="header-label">Şeyda &amp; Rıdvan</span>
+    </header>
+    <dialog class="menu-drawer" id="siteMenu" aria-labelledby="menuTitle">
+        <div class="menu-heading"><h2 id="menuTitle">Anılarımız</h2><button class="icon-button" type="button" data-close-dialog aria-label="Menüyü kapat">×</button></div>
+        <nav aria-label="Ana menü">
+            <button type="button" data-open-dialog="photosDialog">Fotoğraflar <span>{{ photos|length }}</span></button>
+            <button type="button" data-open-dialog="videosDialog">Videolar <span>{{ videos|length }}</span></button>
+            <button type="button" disabled>İletişim <span>Yakında</span></button>
+        </nav>
+    </dialog>
+    <main class="page-shell">
+        <section class="hero-card" aria-labelledby="heroTitle">
+            <p class="eyebrow">Bizim hikâyemiz devam ediyor</p>
+            <h1 id="heroTitle">{{ site.heading }}</h1>
+            <p class="subtitle">{{ site.subtitle }}</p>
             <div class="countdown-grid">
-                {% for item in countdowns %}
-                <article class="countdown-card {{ item.accent }}" data-target="{{ item.target_iso }}" id="{{ item.id }}">
-                    <div class="card-topline"></div>
-
-                    {% if loop.index == 1 %}
-                        <p class="countdown-title special-title">❤️ NİKAH ❤️</p>
-                    {% elif loop.index == 2 %}
-                        <p class="countdown-title special-title">❤️ DÜĞÜN ❤️</p>
-                    {% endif %}
-
-                    <h2>{{ item.label }}</h2>
-
-                    <div class="timer">
-                        <div class="time-box">
-                            <span class="value days">00</span>
-                            <span class="unit">Gün</span>
-                        </div>
-                        <div class="time-box">
-                            <span class="value hours">00</span>
-                            <span class="unit">Saat</span>
-                        </div>
-                        <div class="time-box">
-                            <span class="value minutes">00</span>
-                            <span class="unit">Dakika</span>
-                        </div>
-                        <div class="time-box">
-                            <span class="value seconds">00</span>
-                            <span class="unit">Saniye</span>
-                        </div>
+                {% for event in site.events %}
+                <article class="countdown-card {{ event.accent }}" data-target="{{ event.target_iso }}" data-event="{{ event.id }}" data-before-note="{{ event.before_note }}" data-after-note="{{ event.after_note }}">
+                    <p class="countdown-title">❤️ {{ event.title }} ❤️</p>
+                    <h2>{{ event.label }}</h2>
+                    <p class="timer-state">Kalan süre</p>
+                    <div class="timer" aria-label="{{ event.title }} sayacı">
+                        {% for name, unit in [('days', 'Gün'), ('hours', 'Saat'), ('minutes', 'Dakika'), ('seconds', 'Saniye')] %}
+                        <div class="time-box"><span class="value {{ name }}">00</span><span class="unit">{{ unit }}</span></div>
+                        {% endfor %}
                     </div>
-
-                    {% if loop.index == 1 %}
-    <p class="card-note">Yüzük sağdan -> sola</p>
-{% elif loop.index == 2 %}
-    <p class="card-note">3 5 oynayalım sonra ev🏠</p>
-{% endif %}
+                    <p class="card-note">{{ event.before_note }}</p>
                 </article>
                 {% endfor %}
             </div>
         </section>
+        <section class="memory-section" aria-labelledby="memoryTitle">
+            <div class="section-heading"><div><p class="eyebrow">Bize kalanlar</p><h2 id="memoryTitle">Anılarımız</h2></div><button class="text-button" type="button" data-open-dialog="photosDialog">Tüm fotoğraflar →</button></div>
+            <div class="memory-layout">
+                <article class="daily-card" id="dailyPhotoCard" aria-labelledby="dailyTitle">
+                    <div class="daily-heading"><h3 id="dailyTitle">Günün karesi</h3><span>Her gün bir anı</span></div>
+                    <button class="photo-button daily-photo-button" id="dailyPhotoButton" type="button" disabled aria-label="Günün karesini büyüt">
+                        {% if photos %}<img id="dailyPhotoImage" src="{{ url_for('static', filename=photos[0].src) }}" alt="Anı fotoğrafı — günün karesi bekleniyor">{% else %}<img id="dailyPhotoImage" alt="Günün karesi" hidden>{% endif %}
+                    </button>
+                    <p id="dailyPhotoStatus" role="status">Günün karesi yükleniyor…</p>
+                </article>
+                <div class="memory-strip" aria-label="Anı fotoğrafları">
+                    {% for photo in photos %}
+                    <button class="photo-button memory-thumb" type="button" data-photo-src="{{ url_for('static', filename=photo.src) }}" data-photo-title="{{ photo.title }}" data-photo-caption="{{ photo.caption }}" aria-label="{{ photo.title }} fotoğrafını aç">
+                        <img src="{{ url_for('static', filename=photo.src) }}" alt="{{ photo.title }}" loading="lazy" width="240" height="300">
+                        <span>{{ photo.title }}</span>
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        <section class="story-section" aria-labelledby="storyTitle">
+            <p class="eyebrow">Birlikte yazıyoruz</p><h2 id="storyTitle">Bizim hikâyemiz</h2>
+            <ol class="timeline">
+                {% for event in site.events %}
+                <li data-story-target="{{ event.target_iso }}"><span class="timeline-dot" aria-hidden="true"></span><div><p class="story-date">{{ event.label }} · <span class="story-state">Özel günümüz</span></p><h3>{{ event.title }}</h3><p>{{ event.story }}</p></div></li>
+                {% endfor %}
+            </ol>
+        </section>
     </main>
-
-    <aside class="photo-rail photo-rail-right" aria-label="Fotoğraflar sağ">
-        <figure class="photo-card special-surprise-card" id="specialSurpriseCard">
-            <img src="{{ url_for('static', filename='photos/surpriz.jpg') }}" alt="Sürpriz fotoğraf" loading="lazy">
-        </figure>
-        {% for photo in photos[6:] %}
-        <figure class="photo-card photo-card-{{ loop.index + 6 }}">
-            <img
-                src="{{ url_for('static', filename=photo.src) }}"
-                alt="{{ photo.alt }}"
-                loading="lazy"
-                class="gallery-image"
-            >
-        </figure>
-        {% endfor %}
-    </aside>
-
-    <footer class="footer">
-        <p>© {{ year }} · Sevgiyle hazırlandı</p>
-    </footer>
-
-    <div class="lightbox" id="lightbox" aria-hidden="true">
-        <button class="lightbox-close" id="lightboxClose" aria-label="Kapat">×</button>
-        <img id="lightboxImage" src="" alt="Büyütülmüş fotoğraf">
-    </div>
-
-    <script src="{{ url_for('static', filename='js/countdown.js') }}"></script>
-    <!-- SÜRPRİZ FOTOĞRAF -->
-<div class="qs-photo-modal" id="qsPhotoModal" aria-hidden="true">
-    <div class="qs-photo-card">
-        <button class="qs-close" id="qsClose" aria-label="Kapat">×</button>
-
-        <div class="qs-photo-stage">
-            <img
-                id="qsPhotoImage"
-                src="{{ url_for('static', filename='photos/surpriz.jpg') }}"
-                alt="Sürpriz fotoğraf"
-            >
+    <footer>© {{ year }} · Sevgiyle hazırlandı</footer>
+    <dialog class="gallery-dialog" id="photosDialog" aria-labelledby="photosTitle">
+        <div class="dialog-heading"><div><p class="eyebrow">Birlikte biriktirdiklerimiz</p><h2 id="photosTitle">Fotoğraflar</h2></div><button class="icon-button" type="button" data-close-dialog aria-label="Fotoğraf galerisini kapat">×</button></div>
+        <p class="gallery-description">{{ photos|length }} fotoğraf · Günün karesi bu galeriden ayrı.</p>
+        <div class="photo-grid">
+            {% for photo in photos %}
+            <figure><button class="photo-button" type="button" data-photo-src="{{ url_for('static', filename=photo.src) }}" data-photo-title="{{ photo.title }}" data-photo-caption="{{ photo.caption }}" aria-label="{{ photo.title }} fotoğrafını aç"><img src="{{ url_for('static', filename=photo.src) }}" alt="{{ photo.title }}" loading="lazy" width="360" height="450"></button><figcaption><strong>{{ photo.title }}</strong><span>{{ photo.caption }}</span></figcaption></figure>
+            {% else %}<p>Henüz fotoğraf eklenmedi.</p>{% endfor %}
         </div>
-
-        <div class="qs-photo-tools">
-            <button type="button" class="qs-tool-btn" id="qsZoomIn">Yakınlaş +</button>
-            <button type="button" class="qs-tool-btn" id="qsZoomOut">Uzaklaş -</button>
-            <button type="button" class="qs-tool-btn" id="qsZoomReset">Sıfırla</button>
-
-            <a
-                class="qs-download-btn"
-                href="{{ url_for('static', filename='photos/surpriz.jpg') }}"
-                download
-            >
-                Fotoğrafı indir
-            </a>
+    </dialog>
+    <dialog class="gallery-dialog" id="videosDialog" aria-labelledby="videosTitle">
+        <div class="dialog-heading"><div><p class="eyebrow">Hareketli anılarımız</p><h2 id="videosTitle">Videolar</h2></div><button class="icon-button" type="button" data-close-dialog aria-label="Video galerisini kapat">×</button></div>
+        <div class="video-grid">
+            {% for video in videos %}
+            <article class="video-item"><video controls playsinline preload="none" {% if video.poster %}poster="{{ url_for('static', filename=video.poster) }}"{% endif %} aria-label="{{ video.title }}"><source src="{{ url_for('static', filename=video.src) }}">Tarayıcınız videoyu oynatamıyor.</video><h3>{{ video.title }}</h3><p>{{ video.caption }}</p><a class="text-button" href="{{ url_for('static', filename=video.src) }}" download>Videoyu indir</a></article>
+            {% else %}<p>Henüz video eklenmedi.</p>{% endfor %}
         </div>
-    </div>
-</div>
-
-<style>
-.qs-photo-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(39, 48, 41, 0.82);
-    z-index: 10030;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.qs-photo-modal.active {
-    display: flex;
-}
-
-.qs-photo-card {
-    position: relative;
-    width: min(94vw, 900px);
-    max-height: 92vh;
-    background: rgba(255,255,255,.97);
-    border-radius: 26px;
-    padding: 18px 18px 16px;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
-    animation: qsPop .28s ease;
-}
-
-.qs-close {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    width: 42px;
-    height: 42px;
-    border: none;
-    border-radius: 999px;
-    background: rgba(255,255,255,.96);
-    color: #466048;
-    font-size: 1.8rem;
-    cursor: pointer;
-    box-shadow: 0 8px 18px rgba(0,0,0,.10);
-    z-index: 2;
-}
-
-.qs-photo-stage {
-    width: 100%;
-    height: min(72vh, 720px);
-    overflow: auto;
-    border-radius: 18px;
-    background: #f8f6ef;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-}
-
-#qsPhotoImage {
-    max-width: 100%;
-    max-height: none;
-    border-radius: 18px;
-    background: #fff;
-    box-shadow: 0 12px 30px rgba(0,0,0,.10);
-    transform-origin: center center;
-    transition: transform .18s ease;
-    user-select: none;
-    -webkit-user-drag: none;
-}
-
-.qs-photo-tools {
-    margin-top: 14px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.qs-tool-btn,
-.qs-download-btn {
-    border: none;
-    border-radius: 999px;
-    padding: 10px 16px;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-    transition: transform .18s ease;
-}
-
-.qs-tool-btn {
-    background: #eef7ea;
-    color: #466048;
-}
-
-.qs-download-btn {
-    background: #ffd9b8;
-    color: #8a5b2b;
-}
-
-.qs-tool-btn:hover,
-.qs-download-btn:hover {
-    transform: translateY(-1px);
-}
-
-.special-surprise-card {
-    position: relative;
-    border: 2px solid rgba(232, 164, 107, 0.55) !important;
-    box-shadow:
-        0 18px 40px rgba(98, 127, 104, 0.16),
-        0 0 0 6px rgba(255, 217, 184, 0.22) !important;
-    background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,248,240,.76)) !important;
-}
-
-.special-surprise-card::after {
-    content: "Sürpriz";
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: rgba(255,255,255,.94);
-    color: #8a5b2b;
-    border: 1px solid rgba(232, 164, 107, 0.35);
-    border-radius: 999px;
-    padding: 6px 10px;
-    font-size: 0.78rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-}
-
-@keyframes qsPop {
-    from {
-        opacity: 0;
-        transform: translateY(8px) scale(.98);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-@media (max-width: 640px) {
-    .qs-photo-card {
-        padding: 14px 14px 14px;
-    }
-
-    .qs-photo-stage {
-        height: 60vh;
-    }
-
-}
-</style>
-
-<script>
-(function () {
-    const photoModal = document.getElementById('qsPhotoModal');
-    const photoImage = document.getElementById('qsPhotoImage');
-    let zoomLevel = 1;
-
-    function applyZoom() {
-        photoImage.style.transform = `scale(${zoomLevel})`;
-    }
-    function resetZoom() {
-        zoomLevel = 1;
-        applyZoom();
-    }
-    function openPhotoModal() {
-        resetZoom();
-        photoModal.classList.add('active');
-        photoModal.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden';
-    }
-    function closePhotoModal() {
-        photoModal.classList.remove('active');
-        photoModal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-        resetZoom();
-    }
-
-    document.getElementById('specialSurpriseCard').addEventListener('click', openPhotoModal);
-    document.getElementById('qsClose').addEventListener('click', closePhotoModal);
-    document.getElementById('qsZoomIn').addEventListener('click', function () {
-        zoomLevel = Math.min(zoomLevel + 0.2, 3);
-        applyZoom();
-    });
-    document.getElementById('qsZoomOut').addEventListener('click', function () {
-        zoomLevel = Math.max(zoomLevel - 0.2, 0.6);
-        applyZoom();
-    });
-    document.getElementById('qsZoomReset').addEventListener('click', resetZoom);
-    photoModal.addEventListener('click', function (event) {
-        if (event.target === photoModal) closePhotoModal();
-    });
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && photoModal.classList.contains('active')) closePhotoModal();
-    });
-    photoImage.addEventListener('dblclick', function () {
-        zoomLevel = zoomLevel < 2 ? 2 : 1;
-        applyZoom();
-    });
-})();
-</script>
+    </dialog>
+    <dialog class="photo-dialog" id="photoDialog" aria-labelledby="photoTitle">
+        <div class="dialog-heading"><h2 id="photoTitle">Fotoğraf</h2><button class="icon-button" type="button" data-close-dialog aria-label="Fotoğrafı kapat">×</button></div>
+        <div class="photo-viewport" id="photoViewport"><div class="photo-canvas" id="photoCanvas"><img id="fullPhoto" alt="" draggable="false"></div></div>
+        <p id="photoCaption"></p>
+        <div class="photo-tools"><button type="button" id="zoomOut" aria-label="Fotoğrafı uzaklaştır">−</button><span id="zoomValue" aria-live="polite">%100</span><button type="button" id="zoomIn" aria-label="Fotoğrafı yakınlaştır">+</button><button type="button" id="zoomReset">Sıfırla</button><a id="photoDownload" download>Fotoğrafı indir</a></div>
+    </dialog>
 </body>
 </html>

@@ -1,393 +1,44 @@
-function updateCountdown(card) {
-    const title = card.querySelector('.special-title')?.textContent || '';
-    const isNikahCard = title.includes('NİKAH');
-    const isWeddingCard = title.includes('DÜĞÜN');
-
-    const targetDate = new Date(card.dataset.target).getTime();
-
-    if (Number.isNaN(targetDate)) {
-        console.error('Geçersiz geri sayım tarihi:', card.dataset.target, card);
-        card.dataset.finished = 'false';
-        return;
-    }
-
-    const now = new Date().getTime();
-
-    let diff = targetDate - now;
-    const isFinished = diff <= 0;
-
-    /*
-        Nikah tarihi geçince:
-        - Arka planda finished true kalır.
-        - Video sürprizi yine tetiklenir.
-        - Ekranda ileri sayım görünür.
-    */
-    if (isFinished && (isNikahCard || isWeddingCard)) {
-        diff = now - targetDate;
-
-        const note = card.querySelector('.card-note');
-        if (note) {
-            note.textContent = isNikahCard
-                ? "'ŞEYDA YILMAZ BENİM KARIM' Sayacı"
-                : 'Düğünümüzün üzerinden geçen süre ❤️';
-        }
-    } else if (diff < 0) {
-        diff = 0;
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    card.querySelector('.days').textContent = String(days).padStart(2, '0');
-    card.querySelector('.hours').textContent = String(hours).padStart(2, '0');
-    card.querySelector('.minutes').textContent = String(minutes).padStart(2, '0');
-    card.querySelector('.seconds').textContent = String(seconds).padStart(2, '0');
-
-    card.dataset.finished = isFinished ? 'true' : 'false';
+"use strict";
+function updateCountdown(card, now = Date.now()) {
+  const target = Date.parse(card.dataset.target);
+  if (!Number.isFinite(target)) return;
+  const elapsed = now >= target;
+  const seconds = Math.floor(Math.abs(target - now) / 1000);
+  const values = {
+    days: Math.floor(seconds / 86400),
+    hours: Math.floor(seconds / 3600) % 24,
+    minutes: Math.floor(seconds / 60) % 60,
+    seconds: seconds % 60,
+  };
+  for (const [name, value] of Object.entries(values))
+    card.querySelector(`.${name}`).textContent = String(value).padStart(2, "0");
+  card.querySelector(".timer-state").textContent = elapsed
+    ? card.dataset.event === "dugun"
+      ? "Düğünümüzden beri geçen süre"
+      : "Birlikte geçen süre"
+    : "Kalan süre";
+  card.querySelector(".card-note").textContent = elapsed
+    ? card.dataset.afterNote
+    : card.dataset.beforeNote;
+  card.dataset.finished = String(elapsed);
 }
-
-const countdownCards = document.querySelectorAll('.countdown-card');
-
-function tick() {
-    countdownCards.forEach(updateCountdown);
-    setupNikahSurprise();
+function updateClocks() {
+  const now = Date.now();
+  document
+    .querySelectorAll(".countdown-card")
+    .forEach((card) => updateCountdown(card, now));
+  document.querySelectorAll("[data-story-target]").forEach((item) => {
+    const future = now < Date.parse(item.dataset.storyTarget);
+    item.classList.toggle("is-future", future);
+    item.querySelector(".story-state").textContent = future
+      ? "Sıradaki güzel günümüz"
+      : "Hikâyemizde bir dönüm noktası";
+  });
 }
-
-/* FOTOĞRAF BÜYÜTME */
-const galleryImages = document.querySelectorAll('.gallery-image');
-const lightbox = document.getElementById('lightbox');
-const lightboxImage = document.getElementById('lightboxImage');
-const lightboxClose = document.getElementById('lightboxClose');
-
-if (galleryImages.length && lightbox && lightboxImage && lightboxClose) {
-    galleryImages.forEach((img) => {
-        img.addEventListener('click', () => {
-            lightboxImage.src = img.src;
-            lightboxImage.alt = img.alt;
-            lightbox.classList.add('active');
-            lightbox.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
-        });
-    });
-
-    function closeLightbox() {
-        lightbox.classList.remove('active');
-        lightbox.setAttribute('aria-hidden', 'true');
-        lightboxImage.src = '';
-        document.body.style.overflow = '';
-    }
-
-    lightboxClose.addEventListener('click', closeLightbox);
-
-    lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox) {
-            closeLightbox();
-        }
-    });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-            closeLightbox();
-        }
-    });
-}
-
-/* NİKAH SÜRPRİZ VİDEO */
-const NIKAH_VIDEO_SRC = '/static/photos/nikah-surpriz.mp4';
-const NIKAH_POSTER_SRC = '/static/photos/kapak.jpg';
-const NIKAH_VIDEO_WATCHED_KEY = 'nikah_surprise_video_watched_v1';
-
-let nikahSurpriseInitialized = false;
-
-function getNikahCard() {
-    return Array.from(document.querySelectorAll('.countdown-card')).find((card) => {
-        const title = card.querySelector('.special-title')?.textContent || '';
-        return title.includes('NİKAH');
-    });
-}
-
-function hasWatchedNikahVideo() {
-    return localStorage.getItem(NIKAH_VIDEO_WATCHED_KEY) === 'true';
-}
-
-function markNikahVideoWatched() {
-    localStorage.setItem(NIKAH_VIDEO_WATCHED_KEY, 'true');
-}
-
-function setupNikahSurprise() {
-    const nikahCard = getNikahCard();
-
-    if (!nikahCard) return;
-
-    const isFinished = nikahCard.dataset.finished === 'true';
-    const watched = hasWatchedNikahVideo();
-
-    if (!nikahSurpriseInitialized) {
-        nikahSurpriseInitialized = true;
-        createNikahVideoModal();
-        addNikahHeartClick(nikahCard);
-    }
-
-    if (!isFinished) return;
-
-    if (watched) {
-        unlockNikahCard(nikahCard);
-        renderNikahReplayBox();
-        return;
-    }
-
-    lockNikahCard(nikahCard);
-}
-
-function lockNikahCard(card) {
-    if (card.querySelector('.nikah-surprise-overlay')) return;
-
-    card.classList.add('nikah-surprise-locked');
-
-    const overlay = document.createElement('div');
-    overlay.className = 'nikah-surprise-overlay';
-    const dateFormat = new Intl.DateTimeFormat('tr-TR', { timeZone: 'Europe/Istanbul' });
-    const isNikahDay = dateFormat.format(new Date()) === dateFormat.format(new Date(card.dataset.target));
-    const message = isNikahDay ? 'Bugün nikah günümüz.' : 'Nikah günümüzden bir sürpriz.';
-    overlay.innerHTML = `
-        <div class="nikah-surprise-message">
-            <h3>${message}</h3>
-            <p>Seni çok seviyorum ve ufak bir sürpriz hazırladım.</p>
-            <button type="button" class="nikah-watch-btn">İzle</button>
-        </div>
-    `;
-
-    overlay.querySelector('.nikah-watch-btn').addEventListener('click', function (event) {
-        event.stopPropagation();
-        openNikahVideoModal();
-    });
-
-    card.appendChild(overlay);
-}
-
-function unlockNikahCard(card) {
-    card.classList.remove('nikah-surprise-locked');
-
-    const overlay = card.querySelector('.nikah-surprise-overlay');
-    if (overlay) overlay.remove();
-}
-
-function createNikahVideoModal() {
-    if (document.getElementById('nikahVideoModal')) return;
-
-    const modal = document.createElement('div');
-    modal.className = 'nikah-video-modal';
-    modal.id = 'nikahVideoModal';
-    modal.setAttribute('aria-hidden', 'true');
-
-    modal.innerHTML = `
-        <div class="nikah-video-card">
-            <button type="button" class="nikah-video-close" id="nikahVideoClose" aria-label="Kapat">×</button>
-
-            <video id="nikahVideo" controls playsinline poster="${NIKAH_POSTER_SRC}">
-                <source src="${NIKAH_VIDEO_SRC}" type="video/mp4">
-                Tarayıcın bu videoyu oynatamıyor.
-            </video>
-
-            <div class="nikah-video-tools">
-                <a href="${NIKAH_VIDEO_SRC}" download class="nikah-download-btn">Videoyu indir</a>
-            </div>
-        </div>
-    `;
-
-    document.body.appendChild(modal);
-
-    const closeBtn = document.getElementById('nikahVideoClose');
-    const video = document.getElementById('nikahVideo');
-
-    closeBtn.addEventListener('click', closeNikahVideoModal);
-
-    modal.addEventListener('click', function (event) {
-        if (event.target === modal) {
-            closeNikahVideoModal();
-        }
-    });
-
-    video.addEventListener('ended', function () {
-        markNikahVideoWatched();
-
-        const nikahCard = getNikahCard();
-        if (nikahCard) unlockNikahCard(nikahCard);
-
-        renderNikahReplayBox();
-    });
-
-    document.addEventListener('keydown', function (event) {
-        if (event.key === 'Escape' && modal.classList.contains('active')) {
-            closeNikahVideoModal();
-        }
-    });
-}
-
-function openNikahVideoModal() {
-    const modal = document.getElementById('nikahVideoModal');
-    const video = document.getElementById('nikahVideo');
-
-    if (!modal || !video) return;
-
-    modal.classList.add('active');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-
-    video.currentTime = 0;
-    video.play().catch(() => {
-        // Mobil tarayıcı izin vermezse kullanıcı play tuşuna basabilir.
-    });
-}
-
-function closeNikahVideoModal() {
-    const modal = document.getElementById('nikahVideoModal');
-    const video = document.getElementById('nikahVideo');
-
-    if (!modal || !video) return;
-
-    video.pause();
-
-    modal.classList.remove('active');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-}
-
-function renderNikahReplayBox() {
-    if (document.getElementById('nikahReplayBox')) return;
-
-    const box = document.createElement('div');
-    box.className = 'nikah-replay-box';
-    box.id = 'nikahReplayBox';
-
-    box.innerHTML = `
-        <p>Nikah sürprizi hazır. İstersen tekrar izleyebilirsin.</p>
-        <div class="nikah-replay-actions">
-            <button type="button" id="nikahReplayBtn">Tekrar izle</button>
-            <a href="${NIKAH_VIDEO_SRC}" download>İndir</a>
-        </div>
-    `;
-
-    document.body.appendChild(box);
-
-    document.getElementById('nikahReplayBtn').addEventListener('click', openNikahVideoModal);
-}
-
-function addNikahHeartClick(card) {
-    if (card.dataset.heartClickAdded === 'true') return;
-
-    card.dataset.heartClickAdded = 'true';
-
-    card.addEventListener('click', function (event) {
-        if (
-            event.target.closest('button') ||
-            event.target.closest('a') ||
-            event.target.closest('video')
-        ) {
-            return;
-        }
-
-        createHeartBurst(event.clientX, event.clientY);
-    });
-}
-
-function createHeartBurst(x, y) {
-    const heartCount = 14;
-    const hearts = ['💗', '💖', '💕', '💓'];
-
-    for (let i = 0; i < heartCount; i++) {
-        const heart = document.createElement('span');
-        heart.className = 'pink-heart-pop';
-        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-
-        const angle = Math.random() * Math.PI * 2;
-        const distance = 45 + Math.random() * 75;
-
-        const tx = Math.cos(angle) * distance;
-        const ty = Math.sin(angle) * distance;
-
-        heart.style.left = `${x}px`;
-        heart.style.top = `${y}px`;
-        heart.style.setProperty('--tx', `${tx}px`);
-        heart.style.setProperty('--ty', `${ty}px`);
-        heart.style.animationDelay = `${Math.random() * 0.08}s`;
-
-        document.body.appendChild(heart);
-
-        setTimeout(() => {
-            heart.remove();
-        }, 900);
-    }
-}
-
-async function loadDailyDrivePhoto() {
-    try {
-        const today = new Date().toISOString().slice(0, 10);
-        const response = await fetch(`/api/daily-photo?v=${today}`);
-
-        if (!response.ok) {
-            console.warn('Günlük Drive fotoğrafı alınamadı.');
-            return;
-        }
-
-        const data = await response.json();
-
-        if (!data.image_url) {
-            console.warn('Günlük fotoğraf verisi eksik.', data);
-            return;
-        }
-
-        const targetCard = document.querySelector('.photo-rail-left .photo-card:first-child');
-
-        if (!targetCard) {
-            console.warn('Günlük fotoğraf için hedef fotoğraf kartı bulunamadı.');
-            return;
-        }
-
-        const targetImage = targetCard.querySelector('img');
-
-        if (!targetImage) {
-            console.warn('Günlük fotoğraf kartında img bulunamadı.');
-            return;
-        }
-
-        // Drive resmi gerçekten yüklenene kadar yerel fotoğrafı koru.
-        const localSrc = targetImage.src;
-        const localAlt = targetImage.alt;
-        const dailyImage = new Image();
-        dailyImage.onload = function () {
-            targetImage.onerror = function () {
-                targetImage.onerror = null;
-                targetImage.src = localSrc;
-                targetImage.alt = localAlt;
-                targetCard.classList.remove('daily-drive-card');
-                targetCard.querySelector('.daily-drive-badge')?.remove();
-            };
-            targetImage.src = data.image_url;
-            targetImage.alt = `Günün fotoğrafı: ${data.name || ''}`;
-            targetCard.classList.add('daily-drive-card');
-
-            if (!targetCard.querySelector('.daily-drive-badge')) {
-                const badge = document.createElement('span');
-                badge.className = 'daily-drive-badge';
-                badge.textContent = 'Günün karesi';
-                targetCard.appendChild(badge);
-            }
-        };
-        dailyImage.onerror = function () {
-            console.warn('Drive görseli açılamadı; yerel fotoğraf korunuyor.');
-        };
-        dailyImage.src = data.image_url;
-
-    } catch (error) {
-        console.warn('Günlük Drive fotoğrafı yüklenirken hata oluştu:', error);
-    }
-}
-
-loadDailyDrivePhoto();
-
-tick();
-setInterval(tick, 1000);
-
+updateClocks();
+setInterval(() => {
+  if (!document.hidden) updateClocks();
+}, 1000);
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) updateClocks();
+});

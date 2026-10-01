@@ -1,0 +1,42 @@
+{
+  "title": "Bizim Geri Sayımımız",
+  "heading": "Özel günlerimiz",
+  "subtitle": "Birlikte geçen zaman, yaklaşan güzel günler ve bize kalan anılar.",
+  "events": [
+    {
+      "id": "nikah",
+      "title": "Nikah",
+      "label": "21 Haziran 2026",
+      "target_iso": "2026-06-21T00:00:00+03:00",
+      "accent": "green",
+      "before_note": "Yüzük sağdan → sola",
+      "after_note": "'ŞEYDA YILMAZ BENİM KARIM' Sayacı",
+      "story": "Birlikte hayatımızın yeni bir sayfası."
+    },
+    {
+      "id": "dugun",
+      "title": "Düğün",
+      "label": "31 Ekim 2026",
+      "target_iso": "2026-10-31T00:00:00+03:00",
+      "accent": "peach",
+      "before_note": "3 5 oynayalım sonra ev 🏠",
+      "after_note": "Düğünümüzün üzerinden geçen süre ❤️",
+      "story": "Birlikteliğimizi kutlayacağımız gün."
+    }
+  ],
+  "media_notes": {
+    "surpriz.jpg": {
+      "title": "Sürpriz fotoğraf",
+      "caption": "Sana hazırladığım küçük bir sürpriz. Seni çok seviyorum."
+    },
+    "kapak.jpg": {
+      "title": "Nikah sürprizinin kapağı",
+      "caption": "Nikah sürprizimizin kapak fotoğrafı."
+    },
+    "nikah-surpriz.mp4": {
+      "title": "Nikah sürprizi",
+      "caption": "Nikah günümüz için hazırladığım sürpriz.",
+      "poster": "kapak.jpg"
+    }
+  }
+}

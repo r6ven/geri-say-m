@@ -1,7 +1,15 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
 services:
   - type: web
     name: bizim-gerisayim
     runtime: python
+    rootDir: countdown_site_render_ready/countdown_site
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 60
+    healthCheckPath: /healthz
     plan: free
+    envVars:
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: DRIVE_FOLDER_ID
+        sync: false
