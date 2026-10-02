@@ -673,12 +673,15 @@ dialog::backdrop {
   }
   .availability-panel {
     padding: 7px 10px;
-    margin-left: 0;
-    width: 100%;
+    margin-left: auto;
+    width: max-content;
+    max-width: 100%;
+    flex: 0 0 auto;
   }
   .availability-row {
     font-size: 0.7rem;
     gap: 7px;
+    justify-content: flex-end;
   }
 }
 @media (max-width: 430px) {
