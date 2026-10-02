@@ -625,3 +625,68 @@ dialog::backdrop {
     scroll-behavior: auto !important;
   }
 }
+
+/* Sağ üstte, içeriği örtmeyen programa dayalı durum paneli. */
+.site-header {
+  height: auto;
+  min-height: 78px;
+  flex-wrap: wrap;
+}
+.availability-panel {
+  margin-left: auto;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.44);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 5px 18px rgba(50, 66, 54, 0.05);
+}
+.availability-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+.availability-row + .availability-row {
+  margin-top: 3px;
+}
+.availability-dot {
+  width: 9px;
+  height: 9px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #929c94;
+}
+.availability-row[data-state="busy"] .availability-dot {
+  background: #ee9b24;
+  box-shadow: 0 0 7px rgba(238, 155, 36, 0.35);
+}
+.availability-row[data-state="active"] .availability-dot {
+  background: #4cda53;
+  box-shadow: 0 0 9px rgba(76, 218, 83, 0.6);
+}
+@media (max-width: 600px) {
+  .site-header {
+    gap: 10px;
+  }
+  .header-label {
+    font-size: 1.2rem;
+  }
+  .availability-panel {
+    padding: 7px 10px;
+  }
+  .availability-row {
+    font-size: 0.7rem;
+    gap: 7px;
+  }
+}
+@media (max-width: 430px) {
+  .availability-panel {
+    margin-left: 56px;
+    width: calc(100% - 56px);
+  }
+  .availability-row {
+    font-size: 0.76rem;
+  }
+}

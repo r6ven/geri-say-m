@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 spec = importlib.util.spec_from_file_location("countdown_app", ROOT / "app.py")
 site = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = site
@@ -75,6 +76,16 @@ class SiteTests(unittest.TestCase):
         self.assertEqual(response.status_code, 503)
         self.assertNotIn("private detail", response.get_data(as_text=True))
         self.assertEqual(response.headers["Retry-After"], "60")
+
+    def test_availability_endpoint_and_safe_failure(self):
+        response = self.client.get("/api/availability")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual([p["id"] for p in response.json["people"]], ["seyda", "ridvan"])
+        self.assertEqual(response.headers["Cache-Control"], "no-store")
+        with patch.object(site, "get_availability", side_effect=ValueError("private detail")):
+            failed = self.client.get("/api/availability")
+        self.assertEqual(failed.status_code, 503)
+        self.assertNotIn("private detail", failed.get_data(as_text=True))
 
     def test_home_has_accessible_menu_galleries_no_quiz_or_replay(self):
         with patch.object(site, "list_media", return_value=([{"src": "photos/surpriz.jpg", "title": "Sürpriz", "caption": "Not", "poster": None}], [])):

@@ -12,11 +12,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='js/countdown.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/availability.js') }}" defer></script>
 </head>
 <body>
     <header class="site-header">
         <button class="menu-toggle" id="menuToggle" type="button" aria-label="Menüyü aç" aria-controls="siteMenu" aria-expanded="false"><span></span><span></span><span></span></button>
         <span class="header-label">Şeyda &amp; Rıdvan</span>
+        <aside class="availability-panel" aria-label="Programa göre müsaitlik" title="Ders ve çalışma programına göre durum">
+            <div class="availability-row" data-person="seyda" data-state="unknown"><span class="availability-dot" aria-hidden="true"></span><span class="availability-label" role="status">Şeyda · güncelleniyor</span></div>
+            <div class="availability-row" data-person="ridvan" data-state="unknown"><span class="availability-dot" aria-hidden="true"></span><span class="availability-label" role="status">Rıdvan · güncelleniyor</span></div>
+        </aside>
     </header>
     <dialog class="menu-drawer" id="siteMenu" aria-labelledby="menuTitle">
         <div class="menu-heading"><h2 id="menuTitle">Anılarımız</h2><button class="icon-button" type="button" data-close-dialog aria-label="Menüyü kapat">×</button></div>

@@ -10,6 +10,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from flask import Flask, jsonify, render_template
+from availability import get_availability
 
 app = Flask(__name__)
 ROOT = Path(__file__).resolve().parent
@@ -129,6 +130,18 @@ def daily_photo():
         response = jsonify({"error": "Günün karesi şu an yüklenemiyor.", "retry_after_seconds": RETRY_DELAY})
         response.status_code = 503
         response.headers["Retry-After"] = str(RETRY_DELAY)
+    response.headers["Cache-Control"] = "no-store"
+    return response
+
+
+@app.get("/api/availability")
+def availability():
+    try:
+        response = jsonify(get_availability())
+    except Exception:
+        app.logger.warning("Durum programı okunamadı.")
+        response = jsonify({"error": "Durum güncellenemedi."})
+        response.status_code = 503
     response.headers["Cache-Control"] = "no-store"
     return response
 

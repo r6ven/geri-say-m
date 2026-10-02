@@ -1,0 +1,292 @@
+{
+  "timezone": "Europe/Istanbul",
+  "verified_on": "2026-10-02",
+  "holiday_years": [2026, 2027],
+  "sources": {
+    "school_hours": "Kullanıcının paylaştığı TOKİ Fenertepe Ortaokulu giriş/çıkış duyurusu; ders dağılımındaki farklı saatler yerine bu duyuru kullanıldı.",
+    "weekly_lessons": "Kullanıcının paylaştığı 18.09.2026 tarihli Şeyda Yılmaz haftalık ders dağılımı, toplam 26 ders.",
+    "school_calendar": "https://www.meb.gov.tr/2026-2027-egitim-ogretim-yili-takvimi-aciklandi/haber/41057/tr",
+    "holidays_2026": "https://vakithesaplama.diyanet.gov.tr/icerik.php?icerik=158",
+    "holidays_2027": "https://vakithesaplama.diyanet.gov.tr/icerik.php?icerik=159",
+    "half_day_rule": "https://vakithesaplama.diyanet.gov.tr/2429_kanun.php"
+  },
+  "public_holidays": [
+    {
+      "date": "2026-01-01",
+      "start": "00:00",
+      "name": "Yılbaşı"
+    },
+    {
+      "date": "2026-03-19",
+      "start": "13:00",
+      "name": "Ramazan Bayramı arifesi"
+    },
+    {
+      "date": "2026-03-20",
+      "start": "00:00",
+      "name": "Ramazan Bayramı"
+    },
+    {
+      "date": "2026-03-21",
+      "start": "00:00",
+      "name": "Ramazan Bayramı"
+    },
+    {
+      "date": "2026-03-22",
+      "start": "00:00",
+      "name": "Ramazan Bayramı"
+    },
+    {
+      "date": "2026-04-23",
+      "start": "00:00",
+      "name": "Ulusal Egemenlik ve Çocuk Bayramı"
+    },
+    {
+      "date": "2026-05-01",
+      "start": "00:00",
+      "name": "Emek ve Dayanışma Günü"
+    },
+    {
+      "date": "2026-05-19",
+      "start": "00:00",
+      "name": "Atatürk’ü Anma, Gençlik ve Spor Bayramı"
+    },
+    {
+      "date": "2026-05-26",
+      "start": "13:00",
+      "name": "Kurban Bayramı arifesi"
+    },
+    {
+      "date": "2026-05-27",
+      "start": "00:00",
+      "name": "Kurban Bayramı"
+    },
+    {
+      "date": "2026-05-28",
+      "start": "00:00",
+      "name": "Kurban Bayramı"
+    },
+    {
+      "date": "2026-05-29",
+      "start": "00:00",
+      "name": "Kurban Bayramı"
+    },
+    {
+      "date": "2026-05-30",
+      "start": "00:00",
+      "name": "Kurban Bayramı"
+    },
+    {
+      "date": "2026-07-15",
+      "start": "00:00",
+      "name": "Demokrasi ve Millî Birlik Günü"
+    },
+    {
+      "date": "2026-08-30",
+      "start": "00:00",
+      "name": "Zafer Bayramı"
+    },
+    {
+      "date": "2026-10-28",
+      "start": "13:00",
+      "name": "Cumhuriyet Bayramı arifesi"
+    },
+    {
+      "date": "2026-10-29",
+      "start": "00:00",
+      "name": "Cumhuriyet Bayramı"
+    },
+    {
+      "date": "2027-01-01",
+      "start": "00:00",
+      "name": "Yılbaşı"
+    },
+    {
+      "date": "2027-03-08",
+      "start": "13:00",
+      "name": "Ramazan Bayramı arifesi"
+    },
+    {
+      "date": "2027-03-09",
+      "start": "00:00",
+      "name": "Ramazan Bayramı"
+    },
+    {
+      "date": "2027-03-10",
+      "start": "00:00",
+      "name": "Ramazan Bayramı"
+    },
+    {
+      "date": "2027-03-11",
+      "start": "00:00",
+      "name": "Ramazan Bayramı"
+    },
+    {
+      "date": "2027-04-23",
+      "start": "00:00",
+      "name": "Ulusal Egemenlik ve Çocuk Bayramı"
+    },
+    {
+      "date": "2027-05-01",
+      "start": "00:00",
+      "name": "Emek ve Dayanışma Günü"
+    },
+    {
+      "date": "2027-05-15",
+      "start": "13:00",
+      "name": "Kurban Bayramı arifesi"
+    },
+    {
+      "date": "2027-05-16",
+      "start": "00:00",
+      "name": "Kurban Bayramı"
+    },
+    {
+      "date": "2027-05-17",
+      "start": "00:00",
+      "name": "Kurban Bayramı"
+    },
+    {
+      "date": "2027-05-18",
+      "start": "00:00",
+      "name": "Kurban Bayramı"
+    },
+    {
+      "date": "2027-05-19",
+      "start": "00:00",
+      "name": "Atatürk’ü Anma, Gençlik ve Spor Bayramı"
+    },
+    {
+      "date": "2027-05-19",
+      "start": "00:00",
+      "name": "Kurban Bayramı"
+    },
+    {
+      "date": "2027-07-15",
+      "start": "00:00",
+      "name": "Demokrasi ve Millî Birlik Günü"
+    },
+    {
+      "date": "2027-08-30",
+      "start": "00:00",
+      "name": "Zafer Bayramı"
+    },
+    {
+      "date": "2027-10-28",
+      "start": "13:00",
+      "name": "Cumhuriyet Bayramı arifesi"
+    },
+    {
+      "date": "2027-10-29",
+      "start": "00:00",
+      "name": "Cumhuriyet Bayramı"
+    }
+  ],
+  "school": {
+    "schedule_valid_from": "2026-09-14",
+    "schedule_valid_until": "2027-08-31",
+    "terms": [
+      {
+        "start": "2026-09-14",
+        "end": "2027-01-22"
+      },
+      {
+        "start": "2027-02-08",
+        "end": "2027-06-25"
+      }
+    ],
+    "breaks": [
+      {
+        "start": "2026-11-16",
+        "end": "2026-11-20",
+        "name": "Birinci ara tatil"
+      },
+      {
+        "start": "2027-01-25",
+        "end": "2027-02-05",
+        "name": "Yarıyıl tatili"
+      },
+      {
+        "start": "2027-03-08",
+        "end": "2027-03-12",
+        "name": "İkinci ara tatil"
+      }
+    ],
+    "lesson_periods": [
+      {
+        "number": 1,
+        "start": "09:00",
+        "end": "09:40"
+      },
+      {
+        "number": 2,
+        "start": "09:55",
+        "end": "10:35"
+      },
+      {
+        "number": 3,
+        "start": "10:45",
+        "end": "11:25"
+      },
+      {
+        "number": 4,
+        "start": "11:35",
+        "end": "12:15"
+      },
+      {
+        "number": 5,
+        "start": "12:50",
+        "end": "13:30"
+      },
+      {
+        "number": 6,
+        "start": "13:40",
+        "end": "14:20"
+      },
+      {
+        "number": 7,
+        "start": "14:30",
+        "end": "15:10"
+      },
+      {
+        "number": 8,
+        "start": "15:20",
+        "end": "16:00"
+      }
+    ]
+  },
+  "people": {
+    "seyda": {
+      "name": "Şeyda",
+      "busy_label": "Şeyda derste",
+      "active_label": "Şeyda aktif",
+      "kind": "teacher",
+      "weekly_lessons": {
+        "0": [1, 2, 4, 5],
+        "1": [1, 2, 3, 4],
+        "2": [1, 2, 3, 4, 5],
+        "3": [1, 2, 3, 4, 6, 7, 8],
+        "4": [1, 2, 5, 6, 7, 8]
+      },
+      "date_overrides": {}
+    },
+    "ridvan": {
+      "name": "Rıdvan",
+      "busy_label": "Rıdvan çalışıyor",
+      "active_label": "Rıdvan aktif",
+      "kind": "work",
+      "weekdays": [0, 1, 2, 3, 4],
+      "work_periods": [
+        {
+          "start": "08:30",
+          "end": "12:00"
+        },
+        {
+          "start": "13:00",
+          "end": "18:00"
+        }
+      ],
+      "date_overrides": {}
+    }
+  }
+}

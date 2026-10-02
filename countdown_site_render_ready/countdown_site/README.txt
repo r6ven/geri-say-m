@@ -54,3 +54,27 @@ NOT
 Fotoğraf/video dosyaları herkese açık static yollarından sunulur; sürpriz bir erişim kontrolü değildir.
 Fotoğraf penceresi ve galeriler Escape ile kapanır; klavye odağı modal içinde tutulur.
 Fotoğraf yakınlaştırıldıktan sonra kaydırılarak tamamı incelenebilir.
+
+DURUM PANELİ
+availability_config.json yalnızca ders/mesai programını, tatilleri ve kaynakları tutar.
+Saatler Europe/Istanbul ile sunucuda hesaplanır; Google Takvim bağlantısı gerekmez.
+Şeyda'nın ders dağılımı: Pzt 1,2,4,5 / Sal 1,2,3,4 / Çar 1,2,3,4,5 /
+Per 1,2,3,4,6,7,8 / Cum 1,2,5,6,7,8. Toplam 26 ders.
+Ders süreleri okul duyurusuna göre 40 dakikadır. İlk teneffüs 15 dakika,
+diğer teneffüsler 10 dakika, öğle arası 12:15–12:50 (35 dakika).
+Dağılım belgesinin sütun saatleri farklıdır; ders numaraları korunup okulun duyuru saatleri kullanıldı.
+Rıdvan: hafta içi 08:30–12:00 ve 13:00–18:00. Öğle arası, hafta sonu ve resmî tatiller aktif.
+Resmî tatiller 2026 ve 2027 için doğrulandı; 28 Ekim ve bayram arifeleri 13:00'ten itibaren tatil.
+Şeyda'nın dönemleri 14.09.2026–22.01.2027 ve 08.02.2027–25.06.2027.
+Ara tatiller 16–20.11.2026 ve 08–12.03.2027; yarıyıl tatili 25.01–05.02.2027.
+Yaz tatilinde derste gösterilmez. Bu program 31.08.2027'ye kadar geçerlidir;
+sonrasında yeni program eklenene kadar hafta içi gri durum gösterilir.
+Tören, nöbet ve seminer saatleri bilinmediğinden ders saati gibi gösterilmez.
+Yeni yılın resmî tatillerini ve yeni dönem programını bu JSON dosyasında güncelleyin.
+Kişiye özel izin veya geçici program için date_overrides içine tarih bazlı periods eklenebilir:
+"2026-10-05": {"periods": []} izin; {"periods": [{"start":"10:00","end":"11:00"}]} özel meşgul saat.
+Resmî tatil kuralları özel programdan önce gelir. İdari izinler otomatik varsayılmaz;
+yeni bir okul kapanması/izin kararı açıklanırsa date_overrides ile eklenir.
+Panel durumunu en geç 60 saniyede ve ders/mesai sınırlarında yeniler.
+Sunucuya ulaşılamazsa veya takvim geçerliliği dolarsa gri durum görünür.
+Aktif durumu gerçek çevrimiçi bağlantı değil, program dışında bulunmak anlamına gelir.
