@@ -635,11 +635,9 @@ dialog::backdrop {
 .availability-panel {
   margin-left: auto;
   padding: 10px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(91, 119, 97, 0.28);
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.44);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 5px 18px rgba(50, 66, 54, 0.05);
+  background: transparent;
 }
 .availability-row {
   display: flex;
@@ -675,6 +673,8 @@ dialog::backdrop {
   }
   .availability-panel {
     padding: 7px 10px;
+    margin-left: 0;
+    width: 100%;
   }
   .availability-row {
     font-size: 0.7rem;
@@ -682,10 +682,6 @@ dialog::backdrop {
   }
 }
 @media (max-width: 430px) {
-  .availability-panel {
-    margin-left: 56px;
-    width: calc(100% - 56px);
-  }
   .availability-row {
     font-size: 0.76rem;
   }
