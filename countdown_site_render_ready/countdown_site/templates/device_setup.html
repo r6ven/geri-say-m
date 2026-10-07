@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <meta name="device-csrf" content="{{ csrf_token }}">
+  <meta name="device-next" content="{{ device_next_url }}">
   <title>Cihazı tanıt · Şeyda &amp; Rıdvan</title>
   <link rel="stylesheet" href="/static/css/style.css">
   <script src="/static/js/device_setup.js" defer></script>
@@ -17,7 +18,7 @@
       <p>Bağlantıyı, adına gönderildiği cihazda ve siteyi kullandığın tarayıcıda aç. Bu işlem yalnızca bir kez gerekiyor.</p>
       <button class="text-button" id="enrollDevice" type="button">Bu cihazı tanıt</button>
       <p id="enrollStatus" role="status"></p>
-      <a href="/">Siteye dön</a>
+      <a href="{{ device_next_url }}">Devam et</a>
     </section>
   </main>
 </body>

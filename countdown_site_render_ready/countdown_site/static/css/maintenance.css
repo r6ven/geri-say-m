@@ -1,0 +1,9 @@
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #324236; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; min-height: 100svh; display: grid; place-items: center; padding: 24px; background: radial-gradient(ellipse at 15% 10%, #d8ead699, transparent 55%), radial-gradient(ellipse at 100% 80%, #ffd9b877, transparent 55%), #fdfcf7; }
+.maintenance-card { width: min(100%, 540px); padding: clamp(28px, 6vw, 56px); text-align: center; border: 1px solid #627f6833; border-radius: 32px; background: #ffffff80; box-shadow: 0 18px 45px #627f6814; }
+.heart { font-size: 48px; color: #d68b69; margin-bottom: 22px; }
+.eyebrow { letter-spacing: .18em; font-size: 12px; font-weight: 700; color: #68796a; }
+h1 { font-family: Georgia, serif; font-size: clamp(30px, 7vw, 44px); font-weight: 500; line-height: 1.2; margin: 22px 0; }
+.message { font-size: 17px; line-height: 1.8; margin: 0; }
+.footnote { font-size: 13px; color: #68796a; margin: 28px 0 0; line-height: 1.7; }

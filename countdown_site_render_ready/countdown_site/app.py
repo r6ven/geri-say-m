@@ -9,7 +9,7 @@ from datetime import date, datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, make_response, redirect, render_template, request, url_for
 from availability import get_availability
 from device_routes import devices
 
@@ -25,6 +25,46 @@ DAILY_PHOTO_CACHE = {"date": None, "data": None, "photos": [], "listed_at": 0.0,
 DAILY_PHOTO_LOCK = threading.Lock()
 LIST_TTL = 900
 RETRY_DELAY = 60
+
+
+def maintenance_enabled():
+    return os.environ.get("MAINTENANCE_MODE", "").lower() in {"1", "true", "yes"}
+
+
+@app.context_processor
+def device_destination():
+    return {"device_next_url": url_for("maintenance") if maintenance_enabled() else url_for("home")}
+
+
+def maintenance_response():
+    response = make_response(render_template("maintenance.html"), 503)
+    response.headers["Cache-Control"] = "no-store, private"
+    response.headers["Retry-After"] = "3600"
+    response.headers["X-Robots-Tag"] = "noindex, nofollow"
+    return response
+
+
+@app.before_request
+def hide_site_during_maintenance():
+    if not maintenance_enabled():
+        return None
+    if request.endpoint in {"health", "maintenance", "devices.setup_page", "devices.enroll_browser", "devices.current_browser"}:
+        return None
+    if request.endpoint == "static" and request.view_args.get("filename") in {"css/style.css", "css/maintenance.css", "js/device_setup.js"}:
+        return None
+    if request.path.startswith("/api/"):
+        response = jsonify({"error": "maintenance", "message": "Site bakımda."})
+        response.status_code = 503
+        response.headers["Cache-Control"] = "no-store, private"
+        return response
+    return maintenance_response()
+
+
+@app.get("/maintenance")
+def maintenance():
+    if not maintenance_enabled():
+        return redirect(url_for("home"))
+    return maintenance_response()
 
 
 def get_istanbul_today_key():
