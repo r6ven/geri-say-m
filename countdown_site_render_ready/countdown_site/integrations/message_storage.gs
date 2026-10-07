@@ -56,3 +56,23 @@ function handleMessages_(message, devices, now) {
   }
   return {error:"invalid_request"};
 }
+
+// Owner-only editor check: no test messages are sent and no content is logged.
+function verifyPrivateMessageStorage() {
+  const props = PropertiesService.getScriptProperties();
+  const book = SpreadsheetApp.openById(props.getProperty("DEVICE_SPREADSHEET_ID"));
+  messageSheet_(book, "Mesajlar", MESSAGE_HEADERS);
+  messageSheet_(book, "MesajGorselleri", ["message_id", "part", "base64_json"]);
+  const rows = validateDeviceSheet_(book.getSheetByName("Cihazlar"));
+  const registered = rows.filter(row => row[5] && row[8] === false);
+  const cases = registered.map(row => ({action:"messages_list", device_hash:row[5], person:row[1]}));
+  cases.push({action:"messages_list", device_hash:"0".repeat(64), error:"unrecognized"});
+  cases.forEach(test => {
+    const payload = JSON.stringify({action:test.action, device_hash:test.device_hash, timestamp:Math.floor(Date.now()/1000), nonce:Utilities.getUuid().replace(/-/g, "")});
+    const signature = hex_(Utilities.computeHmacSha256Signature(payload, props.getProperty("DEVICE_STORAGE_SECRET"), Utilities.Charset.UTF_8));
+    const result = JSON.parse(doPost({postData:{contents:JSON.stringify({payload,signature})}}).getContent());
+    if (test.person ? result.person !== test.person : result.error !== test.error) throw new Error("Private message authorization check failed");
+  });
+  SpreadsheetApp.flush();
+  console.log("Private message storage and device authorization checks passed. No messages were sent.");
+}
