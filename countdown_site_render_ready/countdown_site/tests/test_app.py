@@ -77,15 +77,8 @@ class SiteTests(unittest.TestCase):
         self.assertNotIn("private detail", response.get_data(as_text=True))
         self.assertEqual(response.headers["Retry-After"], "60")
 
-    def test_availability_endpoint_and_safe_failure(self):
-        response = self.client.get("/api/availability")
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual([p["id"] for p in response.json["people"]], ["seyda", "ridvan"])
-        self.assertEqual(response.headers["Cache-Control"], "no-store")
-        with patch.object(site, "get_availability", side_effect=ValueError("private detail")):
-            failed = self.client.get("/api/availability")
-        self.assertEqual(failed.status_code, 503)
-        self.assertNotIn("private detail", failed.get_data(as_text=True))
+    def test_schedule_endpoint_is_removed(self):
+        self.assertEqual(self.client.get("/api/availability").status_code, 404)
 
     def test_home_has_accessible_menu_galleries_no_quiz_or_replay(self):
         with patch.object(site, "list_media", return_value=([{"src": "photos/surpriz.jpg", "title": "Sürpriz", "caption": "Not", "poster": None}], [])):
