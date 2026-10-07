@@ -636,3 +636,10 @@ dialog::backdrop {
 
 .menu-drawer nav a { text-decoration: none; }
 .menu-drawer nav a[hidden] { display: none; }
+
+.message-notice { width: 320px; margin: auto; }
+.message-notice h2 { margin: 0 0 12px; font-size: 1.6rem; }
+.message-notice p { margin: 0 0 22px; color: var(--muted); }
+.message-notice-actions { display: flex; gap: 12px; }
+.message-notice-actions a, .message-notice-actions button { flex: 1; padding: 11px 16px; border: 1px solid var(--stroke); border-radius: 12px; text-align: center; text-decoration: none; font: inherit; cursor: pointer; color: var(--text); background: transparent; }
+.message-notice-actions a { background: #dcebdc; }

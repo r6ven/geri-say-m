@@ -13,7 +13,7 @@
       try{if(data.unread && navigator.setAppBadge)await navigator.setAppBadge(data.unread);else if(!data.unread && navigator.clearAppBadge)await navigator.clearAppBadge();}catch{}
       const unread=data.messages.filter(m=>m.recipient===data.person && !m.read_at);
       const key=unread.map(m=>m.id).join("|");
-      if(data.unread && key!==lastNotice && !document.querySelector("dialog[open]")) {notice.showModal();document.body.classList.add("has-dialog");lastNotice=key;}
+      if(unread.length && key!==lastNotice && !document.querySelector("dialog[open]")) {notice.showModal();document.body.classList.add("has-dialog");lastNotice=key;}
     }catch{}finally{busy=false;}
   }
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)refresh();});refresh();setInterval(refresh,60000);
