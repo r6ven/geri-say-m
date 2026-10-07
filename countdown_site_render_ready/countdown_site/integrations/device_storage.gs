@@ -50,7 +50,7 @@ function doPost(e) {
   let lock;
   try {
     const raw = e && e.postData && e.postData.contents;
-    if (!raw || raw.length > 4096) return output_({error: "invalid_request"});
+    if (!raw || raw.length > 1000000) return output_({error: "invalid_request"});
     const envelope = JSON.parse(raw);
     const props = PropertiesService.getScriptProperties();
     const secret = props.getProperty("DEVICE_STORAGE_SECRET");
@@ -68,6 +68,7 @@ function doPost(e) {
     const sheet = SpreadsheetApp.openById(props.getProperty("DEVICE_SPREADSHEET_ID")).getSheetByName("Cihazlar");
     if (!sheet) throw new Error("Missing sheet");
     const rows = validateDeviceSheet_(sheet);
+    if (typeof message.action === "string" && message.action.startsWith("messages_")) return output_(handleMessages_(message, rows, now));
     const result = handleDeviceAction_(message, rows, now);
     if (result.row !== undefined) {
       sheet.getRange(result.row + 2, 1, 1, DEVICE_HEADERS.length).setValues([rows[result.row]]);

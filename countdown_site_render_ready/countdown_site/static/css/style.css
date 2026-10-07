@@ -400,7 +400,8 @@ dialog::backdrop {
   display: grid;
   gap: 10px;
 }
-.menu-drawer nav button {
+.menu-drawer nav button,
+.menu-drawer nav a {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -632,3 +633,6 @@ dialog::backdrop {
   min-height: 78px;
   flex-wrap: wrap;
 }
+
+.menu-drawer nav a { text-decoration: none; }
+.menu-drawer nav a[hidden] { display: none; }

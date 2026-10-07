@@ -37,7 +37,7 @@ def storage_call(action, **params):
     request = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"}, method="POST")
     try:
         with urllib.request.urlopen(request, timeout=20) as response:
-            data = json.loads(response.read(65536))
+            data = json.loads(response.read(1100000))
         if not isinstance(data, dict) or data.get("error") == "storage_unavailable":
             raise StorageUnavailable()
         return data

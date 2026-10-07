@@ -13,6 +13,7 @@
     <script src="{{ url_for('static', filename='js/countdown.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/device.js') }}" defer></script>
+    <script src="/static/js/message_notice.js" defer></script>
 </head>
 <body>
     <header class="site-header">
@@ -24,10 +25,12 @@
         <nav aria-label="Ana menü">
             <button type="button" data-open-dialog="photosDialog">Fotoğraflar <span>{{ photos|length }}</span></button>
             <button type="button" data-open-dialog="videosDialog">Videolar <span>{{ videos|length }}</span></button>
-            <button type="button" disabled>İletişim <span>Yakında</span></button>
+            <button id="contactLocked" type="button" disabled>İletişim <span>Özel</span></button>
+            <a id="contactLink" href="/messages" hidden>İletişim <span id="messageCount"></span></a>
         </nav>
         <p id="deviceIdentityStatus" role="status" hidden></p>
     </dialog>
+    <dialog class="menu-drawer" id="messageNotice" aria-labelledby="messageNoticeTitle"><h2 id="messageNoticeTitle">Mesajın var</h2><p>Eşin sana bir şeyler bırakmış.</p><a href="/messages">Mesajı aç</a><button type="button" data-close-dialog>Daha sonra</button></dialog>
     <main class="page-shell">
         <section class="hero-card" aria-labelledby="heroTitle">
             <p class="eyebrow">Bizim hikâyemiz devam ediyor</p>

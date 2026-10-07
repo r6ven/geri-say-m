@@ -60,4 +60,10 @@ Dört tarayıcı için tek kullanımlık tanıtma ve özel Google E-Tablo kaydı
 Kurulum: integrations/DEVICE_SETUP.md. Apps Script kodu: integrations/device_storage.gs.
 DEVICE_STORAGE_URL ve DEVICE_STORAGE_SECRET Render’da tanımlanmadıkça özellik kapalıdır.
 Anahtarlar ve tanıtma bağlantıları GitHub’a eklenmez.
-Mesaj/çizim özelliği henüz eklenmedi; cihaz tanıma onun için ön koşuldur.
+Özel mesajlar: /messages. Metin/emoji, fotoğraf/GIF ve çizim desteklenir.
+Mesaj ve görseller özel E-Tabloda Mesajlar ve MesajGorselleri sekmelerinde tutulur; herkese açık medya klasörüne yazılmaz.
+Görsel başına 512 KB, metin başına 2000 karakter, toplam 1000 mesaj sınırı vardır.
+Apps Script projesine device_storage.gs ve message_storage.gs birlikte eklenir.
+MAINTENANCE_MODE=true olduğu sürece mesaj ekranı dahil site bakımda kalır; bitince false yapılır.
+Site içi mesaj sayısı ve pencere vardır; push bildirimi veya bildirim izni istemez.
+Ana ekran rozeti yalnızca tarayıcı destekliyor ve gerekli izin önceden verilmişse, site açıkken güncellenebilir.

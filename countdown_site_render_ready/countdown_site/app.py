@@ -11,9 +11,12 @@ from zoneinfo import ZoneInfo
 
 from flask import Flask, jsonify, make_response, redirect, render_template, request, url_for
 from device_routes import devices
+from message_routes import messages
 
 app = Flask(__name__)
 app.register_blueprint(devices)
+app.register_blueprint(messages)
+app.config["MAX_CONTENT_LENGTH"] = 540672
 ROOT = Path(__file__).resolve().parent
 PHOTO_DIR = ROOT / "static" / "photos"
 ISTANBUL = ZoneInfo("Europe/Istanbul")
