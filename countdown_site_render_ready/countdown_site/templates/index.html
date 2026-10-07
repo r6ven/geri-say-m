@@ -13,6 +13,7 @@
     <script src="{{ url_for('static', filename='js/countdown.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/ui.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/availability.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/device.js') }}" defer></script>
 </head>
 <body>
     <header class="site-header">
@@ -30,6 +31,7 @@
             <button type="button" data-open-dialog="videosDialog">Videolar <span>{{ videos|length }}</span></button>
             <button type="button" disabled>İletişim <span>Yakında</span></button>
         </nav>
+        <p id="deviceIdentityStatus" role="status" hidden></p>
     </dialog>
     <main class="page-shell">
         <section class="hero-card" aria-labelledby="heroTitle">

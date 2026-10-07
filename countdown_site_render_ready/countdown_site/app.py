@@ -11,8 +11,10 @@ from zoneinfo import ZoneInfo
 
 from flask import Flask, jsonify, render_template
 from availability import get_availability
+from device_routes import devices
 
 app = Flask(__name__)
+app.register_blueprint(devices)
 ROOT = Path(__file__).resolve().parent
 PHOTO_DIR = ROOT / "static" / "photos"
 ISTANBUL = ZoneInfo("Europe/Istanbul")

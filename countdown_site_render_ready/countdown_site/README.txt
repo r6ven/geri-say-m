@@ -80,3 +80,10 @@ yeni bir okul kapanması/izin kararı açıklanırsa date_overrides ile eklenir.
 Panel durumunu en geç 60 saniyede ve ders/mesai sınırlarında yeniler.
 Sunucuya ulaşılamazsa veya takvim geçerliliği dolarsa gri durum görünür.
 Aktif durumu gerçek çevrimiçi bağlantı değil, program dışında bulunmak anlamına gelir.
+
+ÖZEL CİHAZ TANIMA
+Dört tarayıcı için tek kullanımlık tanıtma ve özel Google E-Tablo kaydı hazırlandı.
+Kurulum: integrations/DEVICE_SETUP.md. Apps Script kodu: integrations/device_storage.gs.
+DEVICE_STORAGE_URL ve DEVICE_STORAGE_SECRET Render’da tanımlanmadıkça özellik kapalıdır.
+Anahtarlar ve tanıtma bağlantıları GitHub’a eklenmez.
+Mesaj/çizim özelliği henüz eklenmedi; cihaz tanıma onun için ön koşuldur.
