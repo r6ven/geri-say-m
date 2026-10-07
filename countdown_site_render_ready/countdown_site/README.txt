@@ -58,8 +58,10 @@ Fotoğraf yakınlaştırıldıktan sonra kaydırılarak tamamı incelenebilir.
 DURUM PANELİ
 availability_config.json yalnızca ders/mesai programını, tatilleri ve kaynakları tutar.
 Saatler Europe/Istanbul ile sunucuda hesaplanır; Google Takvim bağlantısı gerekmez.
-Şeyda'nın ders dağılımı: Pzt 1,2,4,5 / Sal 1,2,3,4 / Çar 1,2,3,4,5 /
+Şeyda'nın ders dağılımı: Pzt 1,2,3,4 / Sal 1,2,3,4 / Çar 1,2,3,4,5 /
 Per 1,2,3,4,6,7,8 / Cum 1,2,5,6,7,8. Toplam 26 ders.
+04.10.2026 tarihli dağılım 05.10.2026 itibarıyla uygulanır; önceki program
+weekly_lessons_history içinde 04.10.2026 tarihine kadar korunur.
 Ders süreleri okul duyurusuna göre 40 dakikadır. İlk teneffüs 15 dakika,
 diğer teneffüsler 10 dakika, öğle arası 12:15–12:50 (35 dakika).
 Dağılım belgesinin sütun saatleri farklıdır; ders numaraları korunup okulun duyuru saatleri kullanıldı.

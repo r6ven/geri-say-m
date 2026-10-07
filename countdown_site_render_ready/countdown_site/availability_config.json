@@ -1,10 +1,13 @@
 {
   "timezone": "Europe/Istanbul",
-  "verified_on": "2026-10-02",
-  "holiday_years": [2026, 2027],
+  "verified_on": "2026-10-07",
+  "holiday_years": [
+    2026,
+    2027
+  ],
   "sources": {
     "school_hours": "Kullanıcının paylaştığı TOKİ Fenertepe Ortaokulu giriş/çıkış duyurusu; ders dağılımındaki farklı saatler yerine bu duyuru kullanıldı.",
-    "weekly_lessons": "Kullanıcının paylaştığı 18.09.2026 tarihli Şeyda Yılmaz haftalık ders dağılımı, toplam 26 ders.",
+    "weekly_lessons": "Kullanıcının paylaştığı 04.10.2026 tarihli Şeyda Yılmaz haftalık ders dağılımı; 05.10.2026 itibarıyla geçerli, toplam 26 ders.",
     "school_calendar": "https://www.meb.gov.tr/2026-2027-egitim-ogretim-yili-takvimi-aciklandi/haber/41057/tr",
     "holidays_2026": "https://vakithesaplama.diyanet.gov.tr/icerik.php?icerik=158",
     "holidays_2027": "https://vakithesaplama.diyanet.gov.tr/icerik.php?icerik=159",
@@ -262,20 +265,101 @@
       "active_label": "Şeyda aktif",
       "kind": "teacher",
       "weekly_lessons": {
-        "0": [1, 2, 4, 5],
-        "1": [1, 2, 3, 4],
-        "2": [1, 2, 3, 4, 5],
-        "3": [1, 2, 3, 4, 6, 7, 8],
-        "4": [1, 2, 5, 6, 7, 8]
+        "0": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "1": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "2": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "3": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8
+        ],
+        "4": [
+          1,
+          2,
+          5,
+          6,
+          7,
+          8
+        ]
       },
-      "date_overrides": {}
+      "date_overrides": {},
+      "weekly_lessons_history": [
+        {
+          "start": "2026-09-14",
+          "end": "2026-10-04",
+          "weekly_lessons": {
+            "0": [
+              1,
+              2,
+              4,
+              5
+            ],
+            "1": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "2": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ],
+            "3": [
+              1,
+              2,
+              3,
+              4,
+              6,
+              7,
+              8
+            ],
+            "4": [
+              1,
+              2,
+              5,
+              6,
+              7,
+              8
+            ]
+          }
+        }
+      ]
     },
     "ridvan": {
       "name": "Rıdvan",
       "busy_label": "Rıdvan çalışıyor",
       "active_label": "Rıdvan aktif",
       "kind": "work",
-      "weekdays": [0, 1, 2, 3, 4],
+      "weekdays": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
       "work_periods": [
         {
           "start": "08:30",

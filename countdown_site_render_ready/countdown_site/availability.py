@@ -65,7 +65,12 @@ def person_status(config, key, now):
             return result("active")
         if any(in_date_range(day, holiday["start"], holiday["end"]) for holiday in school["breaks"]):
             return result("active")
-        lessons = person["weekly_lessons"].get(str(now.weekday()), [])
+        weekly_lessons = person["weekly_lessons"]
+        for previous in person.get("weekly_lessons_history", []):
+            if in_date_range(day, previous["start"], previous["end"]):
+                weekly_lessons = previous["weekly_lessons"]
+                break
+        lessons = weekly_lessons.get(str(now.weekday()), [])
         periods = [period for period in school["lesson_periods"] if period["number"] in lessons]
     else:
         periods = person["work_periods"] if now.weekday() in person["weekdays"] else []

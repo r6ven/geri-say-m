@@ -32,8 +32,20 @@ class AvailabilityTests(unittest.TestCase):
         for clock in ["09:40", "09:54", "10:35", "11:25", "12:15", "12:49", "13:30", "14:20", "15:10", "16:00"]:
             with self.subTest(clock=clock):
                 self.assertEqual(self.states(f"2026-10-08T{clock}:00+03:00")["seyda"], "active")
-        self.assertEqual(self.states("2026-10-05T10:45:00+03:00")["seyda"], "active")
+        self.assertEqual(self.states("2026-10-05T12:50:00+03:00")["seyda"], "active")
         self.assertEqual(self.states("2026-10-07T12:50:00+03:00")["seyda"], "busy")
+
+    def test_updated_program_effective_october_5(self):
+        self.assertEqual(self.config["people"]["seyda"]["weekly_lessons"], {
+            "0": [1, 2, 3, 4], "1": [1, 2, 3, 4], "2": [1, 2, 3, 4, 5],
+            "3": [1, 2, 3, 4, 6, 7, 8], "4": [1, 2, 5, 6, 7, 8]})
+        for day, third, fifth in [("2026-09-28", "active", "busy"),
+                                  ("2026-10-05", "busy", "active"),
+                                  ("2026-10-12", "busy", "active")]:
+            with self.subTest(day=day):
+                self.assertEqual(self.states(f"{day}T10:45:00+03:00")["seyda"], third)
+                self.assertEqual(self.states(f"{day}T12:50:00+03:00")["seyda"], fifth)
+                self.assertEqual(self.states(f"{day}T11:35:00+03:00")["seyda"], "busy")
 
     def test_work_boundaries_and_weekends(self):
         for clock, expected in [("08:29", "active"), ("08:30", "busy"), ("11:59", "busy"), ("12:00", "active"), ("12:59", "active"), ("13:00", "busy"), ("17:59", "busy"), ("18:00", "active")]:
